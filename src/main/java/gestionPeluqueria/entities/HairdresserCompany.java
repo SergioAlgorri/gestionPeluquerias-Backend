@@ -16,8 +16,7 @@ public class HairdresserCompany {
     private long id;
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "company_id")
+    @OneToMany(mappedBy = "company")
     private List<Hairdresser> hairdressers = new ArrayList<>();
     @OneToMany
     @JoinColumn(name = "company_id")

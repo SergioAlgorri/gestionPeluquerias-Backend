@@ -23,6 +23,10 @@ public class Hairdresser {
     private String address;
     private String telephone;
 
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private HairdresserCompany company;
+
     @OneToMany(mappedBy = "hairdresser")
     private List<Employee> employees = new ArrayList<>();
 
@@ -33,11 +37,13 @@ public class Hairdresser {
 
     }
 
-    public Hairdresser(LocalTime openingTime, LocalTime closingTime, String address, String telephone) {
+    public Hairdresser(LocalTime openingTime, LocalTime closingTime, String address, String telephone,
+                       HairdresserCompany company) {
         this.openingTime = openingTime;
         this.closingTime = closingTime;
         this.address = address;
         this.telephone = telephone;
+        this.company = company;
     }
 
     public long getId() {
@@ -80,6 +86,14 @@ public class Hairdresser {
         this.telephone = telephone;
     }
 
+    public HairdresserCompany getCompany() {
+        return company;
+    }
+
+    public void setCompany(HairdresserCompany company) {
+        this.company = company;
+    }
+
     public List<Employee> getEmployees() {
         return employees;
     }
@@ -101,12 +115,15 @@ public class Hairdresser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Hairdresser that = (Hairdresser) o;
-        return Objects.equals(openingTime, that.openingTime) && Objects.equals(closingTime, that.closingTime) && Objects.equals(address, that.address) && Objects.equals(telephone, that.telephone) && Objects.equals(employees, that.employees) && Objects.equals(appointments, that.appointments);
+        return Objects.equals(openingTime, that.openingTime) && Objects.equals(closingTime, that.closingTime)
+                && Objects.equals(address, that.address) && Objects.equals(telephone, that.telephone)
+                && Objects.equals(company, that.company) && Objects.equals(employees, that.employees)
+                && Objects.equals(appointments, that.appointments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(openingTime, closingTime, address, telephone, employees, appointments);
+        return Objects.hash(openingTime, closingTime, address, telephone, company, employees, appointments);
     }
 
     @Override
@@ -117,6 +134,7 @@ public class Hairdresser {
                 ", closingTime=" + closingTime +
                 ", address='" + address + '\'' +
                 ", telephone='" + telephone + '\'' +
+                ", company=" + company +
                 ", employees=" + employees +
                 ", appointments=" + appointments +
                 '}';
