@@ -37,13 +37,11 @@ public class Hairdresser {
 
     }
 
-    public Hairdresser(LocalTime openingTime, LocalTime closingTime, String address, String telephone,
-                       HairdresserCompany company) {
+    public Hairdresser(LocalTime openingTime, LocalTime closingTime, String address, String telephone) {
         this.openingTime = openingTime;
         this.closingTime = closingTime;
         this.address = address;
         this.telephone = telephone;
-        this.company = company;
     }
 
     public long getId() {
@@ -116,14 +114,12 @@ public class Hairdresser {
         if (o == null || getClass() != o.getClass()) return false;
         Hairdresser that = (Hairdresser) o;
         return Objects.equals(openingTime, that.openingTime) && Objects.equals(closingTime, that.closingTime)
-                && Objects.equals(address, that.address) && Objects.equals(telephone, that.telephone)
-                && Objects.equals(company, that.company) && Objects.equals(employees, that.employees)
-                && Objects.equals(appointments, that.appointments);
+                && Objects.equals(address, that.address) && Objects.equals(telephone, that.telephone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(openingTime, closingTime, address, telephone, company, employees, appointments);
+        return Objects.hash(openingTime, closingTime, address, telephone);
     }
 
     @Override
