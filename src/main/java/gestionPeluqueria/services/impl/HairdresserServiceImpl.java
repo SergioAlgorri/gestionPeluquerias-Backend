@@ -15,7 +15,8 @@ public class HairdresserServiceImpl implements IHairdresserService {
 
     private final HairdresserRepository hairdresserRepository;
     private final HairdresserCompanyRepository hairdresserCompanyRepository;
-    private String name = "Peluquería UNICAN";
+
+    private static final String COMPANY_NAME = "Peluquería UNICAN";
 
     @Autowired
     public HairdresserServiceImpl(HairdresserRepository hairdresserRepository,
@@ -23,7 +24,6 @@ public class HairdresserServiceImpl implements IHairdresserService {
         this.hairdresserRepository = hairdresserRepository;
         this.hairdresserCompanyRepository = hairdresserCompanyRepository;
     }
-
 
     @Override
     public List<Hairdresser> findAll() {
@@ -49,14 +49,15 @@ public class HairdresserServiceImpl implements IHairdresserService {
             }
         }
 
-        HairdresserCompany hairdresserCompany = hairdresserCompanyRepository.findByName(name);
+        HairdresserCompany hairdresserCompany = hairdresserCompanyRepository.findByName(COMPANY_NAME);
         hairdresser.setCompany(hairdresserCompany);
-        return hairdresserRepository.save(hairdresser);
+        hairdresserRepository.save(hairdresser);
+        return hairdresser;
     }
 
     @Override
     public Hairdresser updateHairdresser(long idHairdresser, Hairdresser hairdresser) {
-        Hairdresser hairdresserFound = hairdresserRepository.findById(idHairdresser);
+        Hairdresser hairdresserFound = this.findById(idHairdresser);
 
         if (hairdresserFound ==  null) {
             return null;
@@ -85,6 +86,11 @@ public class HairdresserServiceImpl implements IHairdresserService {
     @Override
     public void deleteHairdresser(long idHairdresser) {
         Hairdresser hairdresser = this.findById(idHairdresser);
+
+        if (hairdresser == null) {
+            return;
+        }
+
         hairdresserRepository.delete(hairdresser);
     }
 }
