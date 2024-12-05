@@ -65,7 +65,7 @@ public class HairdresserController {
         try {
             Hairdresser hairdresserCreated = hairdresserService.createHairdresser(hairdresser);
 
-            if (hairdresser == null) {
+            if (hairdresserCreated == null) {
                 return new ResponseEntity<>(null, HttpStatus.CONFLICT);
             }
 
