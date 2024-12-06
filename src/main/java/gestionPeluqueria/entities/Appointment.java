@@ -94,16 +94,16 @@ public class Appointment {
        return this.endTime = startTime.plusMinutes(service.getTotalDuration());
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
     public BigDecimal calculatePrice() {
         if (reward != null) {
             return service.getPrice().multiply(reward.getDiscountAmount()).setScale(2, RoundingMode.DOWN);
         }
 
         return service.getPrice().setScale(2, RoundingMode.DOWN);
+    }
+
+    public BigDecimal getPrice() {
+        return price;
     }
 
     public String getComment() {

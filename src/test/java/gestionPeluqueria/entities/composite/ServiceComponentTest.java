@@ -3,12 +3,16 @@ package gestionPeluqueria.entities.composite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ServiceComponentTest {
+
+    public static final BigDecimal HAIRCUT_PRICE = new BigDecimal("13.70");
+    public static final BigDecimal HAIR_COLOR_PRICE = new BigDecimal("45.50");
 
     SimpleService service1;
     String name;
@@ -33,14 +37,14 @@ public class ServiceComponentTest {
             add(30);
             add(15);
         }};
-        service1 =  new SimpleService(name, description, ServicePrices.HAIR_COLOR_PRICE, duration);
+        service1 =  new SimpleService(name, description, HAIR_COLOR_PRICE, duration);
 
         name2 = "Corte Adulto";
         description2 = "Corte de Pelo Adulto";
         duration2 = new ArrayList<>() {{
             add(30);
         }};
-        service2 =  new SimpleService(name2, description2, ServicePrices.HAIRCUT_PRICE, duration2);
+        service2 =  new SimpleService(name2, description2, HAIRCUT_PRICE, duration2);
 
         name3 = "Corte y Tinte Adulto";
         description3 = "Corte y Tinte de Pelo Adulto";
@@ -54,10 +58,9 @@ public class ServiceComponentTest {
         assertEquals(name, service1.getName(), "The name should be equal to the expected value");
         assertEquals(description, service1.getDescription(),
                 "The description should be equal to the expected value");
-        assertEquals(ServicePrices.HAIR_COLOR_PRICE, service1.getPrice(),
+        assertEquals(HAIR_COLOR_PRICE, service1.getPrice(),
                 "The price should be equal to the expected value");
         assertEquals(duration, service1.getDuration(), "The duration should be equal to the expected value");
-
         assertEquals(60, service1.getTotalDuration(), "The total duration should be 60");
     }
 
@@ -78,7 +81,7 @@ public class ServiceComponentTest {
     @Test
     void testEqualsAndHashCode() {
         SimpleService service3 = new SimpleService("Tinte Adulto", "Tinte de Pelo Adulto",
-                ServicePrices.HAIR_COLOR_PRICE, new ArrayList<>(List.of(15,30,15)));
+                HAIR_COLOR_PRICE, new ArrayList<>(List.of(15,30,15)));
 
         assertEquals(service1, service3, "Services with the same values should be equal");
         assertNotEquals(service1, service2, "Services with different values should not be equal");
