@@ -16,7 +16,7 @@ public class CompositeService extends ServiceComponent {
     private List<ServiceComponent> services = new ArrayList<>();
 
     public CompositeService(String name, String description) {
-        super(name, description, BigDecimal.ZERO, new ArrayList<>());
+        super(name, description);
     }
 
     public CompositeService() {
@@ -35,7 +35,9 @@ public class CompositeService extends ServiceComponent {
     public BigDecimal getPrice() {
         BigDecimal total = new BigDecimal("0.00");
         for (ServiceComponent sc: services) {
-            total = total.add(sc.getPrice());
+            if (sc instanceof SimpleService) {
+                total = total.add(((SimpleService) sc).getPrice());
+            }
         }
 
         return total;
@@ -45,9 +47,10 @@ public class CompositeService extends ServiceComponent {
     public List<Integer> getDuration() {
         List<Integer> duration = new ArrayList<>();
         for (ServiceComponent sc: services) {
-            duration.addAll(sc.getDuration());
-            duration.add(0);    // Duración 0 añadida para que las posiciones del array 0,2,4,... sean trabajo
-                                // y las otras posiciones (1,3,5,...) sean descanso.
+            if (sc instanceof SimpleService) {
+                duration.addAll(((SimpleService) sc).getDuration());
+                duration.add(0);    // Duración 0 añadida para que las posiciones del array 0,2,4,... sean trabajo
+            }                       // y las otras posiciones (1,3,5,...) sean descanso.
         }
 
         duration.remove(duration.size() - 1);   // Elimina el último 0 añadido

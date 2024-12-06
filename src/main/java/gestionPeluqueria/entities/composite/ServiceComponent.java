@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,18 +26,10 @@ public abstract  class ServiceComponent {
     protected long id;
     protected String name;
     protected String description;
-    protected BigDecimal price;
 
-    @ElementCollection
-    @CollectionTable(name = "service_duration", joinColumns = @JoinColumn(name = "service_id"))
-    @Column(name = "duration_minutes")
-    protected List<Integer> duration = new ArrayList<>();
-
-    public ServiceComponent(String name, String description, BigDecimal price, List<Integer> duration) {
+    public ServiceComponent(String name, String description) {
         this.name = name;
         this.description = description;
-        this.price = price;
-        this.duration = duration;
     }
 
     public ServiceComponent() {
@@ -69,22 +60,8 @@ public abstract  class ServiceComponent {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public List<Integer> getDuration() {
-        return duration;
-    }
-
-    public void setDuration(List<Integer> duration) {
-        this.duration = duration;
-    }
-
+    public abstract BigDecimal getPrice();
+    public abstract List<Integer> getDuration ();
     public abstract int getTotalDuration();
 
     @Override
@@ -92,12 +69,12 @@ public abstract  class ServiceComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServiceComponent that = (ServiceComponent) o;
-        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(duration, that.duration);
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, price, duration);
+        return Objects.hash(name, description);
     }
 
     @Override
@@ -106,8 +83,6 @@ public abstract  class ServiceComponent {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", price=" + price +
-                ", duration=" + duration +
                 '}';
     }
 }
