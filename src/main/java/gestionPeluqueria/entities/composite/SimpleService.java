@@ -1,19 +1,47 @@
 package gestionPeluqueria.entities.composite;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "simple_service")
 public class SimpleService extends ServiceComponent {
 
+    private BigDecimal price;
+
+    @ElementCollection
+    @CollectionTable(name = "service_duration", joinColumns = @JoinColumn(name = "service_id"))
+    @Column(name = "duration_minutes")
+    private List<Integer> duration = new ArrayList<>();
+
     public SimpleService(String name, String description, BigDecimal price, List<Integer> duration) {
-        super(name, description, price, duration);
+        super(name, description);
+        this.price = price;
+        this.duration = duration;
     }
 
     public SimpleService() {
 
+    }
+
+    @Override
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    @Override
+    public List<Integer> getDuration() {
+        return duration;
+    }
+
+    public void setDuration(List<Integer> duration) {
+        this.duration = duration;
     }
 
     @Override

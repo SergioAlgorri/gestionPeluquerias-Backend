@@ -33,7 +33,7 @@ public class HairdresserTest {
         address = "C/Gutierrez Solana";
         telephone = "671134561";
 
-        paramHairdresser = new Hairdresser(openingTime, closingTime, address, telephone, mockHairdresserCompany);
+        paramHairdresser = new Hairdresser(openingTime, closingTime, address, telephone);
     }
 
     @Test
@@ -60,8 +60,6 @@ public class HairdresserTest {
                 "The address should be equal to the expected value");
         assertEquals(telephone, paramHairdresser.getTelephone(),
                 "The telephone should be equal to the expected value");
-        assertEquals(mockHairdresserCompany, paramHairdresser.getCompany(),
-                "The company should be equal to the expected value");
         assertEquals(0, emptyHairdresser.getEmployees().size(),
                 "The employees should be empty by default");
         assertEquals(0, emptyHairdresser.getAppointments().size(),
@@ -133,10 +131,9 @@ public class HairdresserTest {
 
     @Test
     public void testEqualsAndHashCode() {
-        Hairdresser hairdresser2 = new Hairdresser(openingTime, closingTime, address, telephone,
-                mockHairdresserCompany);
+        Hairdresser hairdresser2 = new Hairdresser(openingTime, closingTime, address, telephone);
         Hairdresser hairdresser3 = new Hairdresser(openingTime.plusHours(1),
-                closingTime, address, telephone, mockHairdresserCompany);
+                closingTime, address, telephone);
 
         assertEquals(paramHairdresser, hairdresser2, "Hairdressers with the same values should be equal");
         assertNotEquals(paramHairdresser, hairdresser3,
