@@ -1,5 +1,7 @@
 package gestionPeluqueria.entities.composite;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -9,6 +11,15 @@ import java.util.Objects;
 
 @Entity(name = "service_component")
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SimpleService.class, name = "simple"),
+        @JsonSubTypes.Type(value = CompositeService.class, name = "composite")
+})
 public abstract  class ServiceComponent {
 
     @Id
