@@ -1,6 +1,9 @@
 package gestionPeluqueria.services.impl;
 
+import gestionPeluqueria.dto.RequestServiceDTO;
+import gestionPeluqueria.entities.composite.CompositeService;
 import gestionPeluqueria.entities.composite.ServiceComponent;
+import gestionPeluqueria.entities.composite.SimpleService;
 import gestionPeluqueria.repositories.ServiceRepository;
 import gestionPeluqueria.services.IHairService;
 import org.springframework.stereotype.Service;
@@ -33,14 +36,29 @@ public class HairServiceImpl implements IHairService {
     }
 
     @Override
-    public ServiceComponent createService(ServiceComponent service) {
+    public ServiceComponent createService(RequestServiceDTO service) {
+        ServiceComponent serviceCreated;
+
+        // Servicio Simple
+        if (service.getServices() == null) {
+            serviceCreated = new SimpleService(service.getName(), service.getDescription(),
+                    service.getPrice(), service.getDuration());
+        } else {
+            // Servicio Compuesto
+            serviceCreated = new CompositeService(service.getName(), service.getDescription());
+            for (Long l: service.getServices()) {
+                ServiceComponent serviceComponent = this.findById(l);
+                ((CompositeService) serviceCreated).addService(serviceComponent);
+            }
+        }
+
         for (ServiceComponent sc: this.findAll()) {
-            if (sc.equals(service)) {
+            if (sc.equals(serviceCreated)) {
                 return null;
             }
         }
 
-        return serviceRepository.save(service);
+        return serviceRepository.save(serviceCreated);
     }
 
     @Override

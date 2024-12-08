@@ -18,14 +18,12 @@ public class HairdresserCompany {
 
     @OneToMany(mappedBy = "company")
     private List<Hairdresser> hairdressers = new ArrayList<>();
-    @OneToMany
-    @JoinColumn(name = "company_id")
+
+    @Transient
     private List<ServiceComponent> services = new ArrayList<>();
-    @OneToMany
-    @JoinColumn(name = "company_id")
+    @Transient
     private List<Reward> rewards = new ArrayList<>();
-    @OneToMany
-    @JoinColumn(name = "company_id")
+    @Transient
     private List<Client> clients = new ArrayList<>();
 
     public HairdresserCompany(String name) {
@@ -103,9 +101,11 @@ public class HairdresserCompany {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", hairdressers=" + hairdressers +
+                /*
                 ", clients=" + clients +
                 ", services=" + services +
                 ", rewards=" + rewards +
+                 */
                 '}';
     }
 }

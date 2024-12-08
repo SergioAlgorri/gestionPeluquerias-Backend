@@ -63,6 +63,8 @@ public abstract  class ServiceComponent {
     public abstract BigDecimal getPrice();
     public abstract List<Integer> getDuration ();
     public abstract int getTotalDuration();
+    public abstract void setPrice(BigDecimal price);
+    public abstract void setDuration(List<Integer> duration);
 
     @Override
     public boolean equals(Object o) {

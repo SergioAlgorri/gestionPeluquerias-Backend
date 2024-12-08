@@ -31,6 +31,7 @@ public class SimpleService extends ServiceComponent {
         return price;
     }
 
+    @Override
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -40,6 +41,7 @@ public class SimpleService extends ServiceComponent {
         return duration;
     }
 
+    @Override
     public void setDuration(List<Integer> duration) {
         this.duration = duration;
     }

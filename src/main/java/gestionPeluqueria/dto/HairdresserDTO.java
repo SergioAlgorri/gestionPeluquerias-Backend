@@ -1,6 +1,7 @@
 package gestionPeluqueria.dto;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HairdresserDTO {
@@ -11,8 +12,8 @@ public class HairdresserDTO {
     private String address;
     private String telephone;
     private String companyName;
-    private List<AppointmentDTO> appointments;
-    private List<EmployeeDTO> employees;
+    private List<AppointmentDTO> appointments = new ArrayList<>();
+    private List<EmployeeDTO> employees = new ArrayList<>();
 
     public HairdresserDTO() {
 

@@ -1,5 +1,6 @@
 package gestionPeluqueria.controllers;
 
+import gestionPeluqueria.dto.RequestServiceDTO;
 import gestionPeluqueria.entities.composite.ServiceComponent;
 import gestionPeluqueria.services.impl.HairServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class ServiceController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ServiceComponent> createService(@RequestBody ServiceComponent service) {
+    public ResponseEntity<ServiceComponent> createService(@RequestBody RequestServiceDTO service) {
         try {
             ServiceComponent serviceCreated = hairService.createService(service);
 
@@ -58,7 +59,7 @@ public class ServiceController {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(service);
+            return ResponseEntity.status(HttpStatus.CREATED).body(serviceCreated);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

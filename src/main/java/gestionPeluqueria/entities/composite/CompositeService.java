@@ -66,4 +66,14 @@ public class CompositeService extends ServiceComponent {
 
         return total;
     }
+
+    @Override
+    public void setPrice(BigDecimal price) {
+        this.getPrice();
+    }
+
+    @Override
+    public void setDuration(List<Integer> duration) {
+        this.getDuration();
+    }
 }
