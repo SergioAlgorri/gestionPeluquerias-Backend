@@ -2,7 +2,6 @@ package gestionPeluqueria.services.impl;
 
 import gestionPeluqueria.entities.HairdresserCompany;
 import gestionPeluqueria.repositories.HairdresserCompanyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class HairdresserCompanyServiceImpl {
 

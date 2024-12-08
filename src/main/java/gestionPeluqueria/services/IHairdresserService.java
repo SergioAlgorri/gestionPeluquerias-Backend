@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface IHairdresserService {
 
-    public List<Hairdresser> findAll();
-    public Hairdresser findById(long id);
-    public Hairdresser createHairdresser(Hairdresser hairdresser);
-    public Hairdresser updateHairdresser(long idHairdresser, Hairdresser hairdresser);
-    public void deleteHairdresser(long idHairdresser);
+    List<Hairdresser> findAll();
+    Hairdresser findById(long id);
+    Hairdresser createHairdresser(Hairdresser hairdresser);
+    Hairdresser updateHairdresser(long idHairdresser, Hairdresser hairdresser);
+    void deleteHairdresser(long idHairdresser);
 }
