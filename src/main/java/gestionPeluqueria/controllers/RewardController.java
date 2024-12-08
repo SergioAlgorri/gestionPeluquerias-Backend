@@ -34,6 +34,7 @@ public class RewardController {
         }
     }
 
+    /*
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Reward> getReward(@PathVariable("id") long id) {
         try {
@@ -48,9 +49,9 @@ public class RewardController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reward> createService(@RequestBody Reward reward) {
+    public ResponseEntity<Reward> createReward(@RequestBody Reward reward) {
         try {
             Reward rewardCreated = rewardService.createReward(reward);
 
@@ -81,7 +82,7 @@ public class RewardController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HttpStatus> deleteService(@PathVariable("id") long id) {
+    public ResponseEntity<HttpStatus> deleteReward(@PathVariable("id") long id) {
         try {
             if (rewardService.findById(id) == null) {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
