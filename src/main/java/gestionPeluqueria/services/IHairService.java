@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface IHairService {
 
-    public List<ServiceComponent> findAll();
-    public ServiceComponent findById(long idService);
-    public ServiceComponent createService(RequestServiceDTO service);
-    public ServiceComponent updateService(long idService, ServiceComponent service);
-    public void deleteService(long idService);
+    List<ServiceComponent> findAll();
+    ServiceComponent findById(long idService);
+    ServiceComponent createService(RequestServiceDTO service);
+    ServiceComponent updateService(long idService, ServiceComponent service);
+    void deleteService(long idService);
 }
