@@ -1,7 +1,6 @@
 package gestionPeluqueria.services.impl;
 
 import gestionPeluqueria.dto.RequestServiceDTO;
-import gestionPeluqueria.entities.Hairdresser;
 import gestionPeluqueria.entities.composite.CompositeService;
 import gestionPeluqueria.entities.composite.ServiceComponent;
 import gestionPeluqueria.entities.composite.SimpleService;
