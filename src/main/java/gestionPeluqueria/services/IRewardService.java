@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface IRewardService {
 
-    public List<Reward> findAll();
-    public Reward findById(long idReward);
-    public Reward createReward(Reward reward);
-    public Reward updateReward(long idReward, Reward reward);
-    public void deleteReward(long idReward);
+    List<Reward> findAll();
+    Reward findById(long idReward);
+    Reward createReward(Reward reward);
+    Reward updateReward(long idReward, Reward reward);
+    void deleteReward(long idReward);
 }
