@@ -31,6 +31,10 @@ public class CompositeService extends ServiceComponent {
         services.remove(service);
     }
 
+    public List<ServiceComponent> getServices() {
+        return services;
+    }
+
     @Override
     public BigDecimal getPrice() {
         BigDecimal total = new BigDecimal("0.00");

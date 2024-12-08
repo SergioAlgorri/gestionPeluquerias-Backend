@@ -2,6 +2,7 @@ package gestionPeluqueria.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class RequestServiceDTO {
 
@@ -49,5 +50,20 @@ public class RequestServiceDTO {
 
     public void setServices(List<Long> services) {
         this.services = services;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestServiceDTO that = (RequestServiceDTO) o;
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description)
+                && Objects.equals(price, that.price) && Objects.equals(duration, that.duration)
+                && Objects.equals(services, that.services);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, price, duration, services);
     }
 }

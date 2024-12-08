@@ -59,8 +59,7 @@ public class HairdresserController {
         }
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HairdresserDTO> createHairdresser(@RequestBody Hairdresser hairdresser) {
         try {
             Hairdresser hairdresserCreated = hairdresserService.createHairdresser(hairdresser);
