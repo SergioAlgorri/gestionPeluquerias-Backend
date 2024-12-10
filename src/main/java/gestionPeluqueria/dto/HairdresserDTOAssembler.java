@@ -29,8 +29,8 @@ public class HairdresserDTOAssembler {
 
         for (Employee e: hairdresser.getEmployees()) {
             String name = e.getName();
-
-            EmployeeDTO employeeDTO = new EmployeeDTO(name);
+            String email = e.getEmail();
+            EmployeeDTO employeeDTO = new EmployeeDTO(name, email);
             result.addEmployees(employeeDTO);
         }
 
