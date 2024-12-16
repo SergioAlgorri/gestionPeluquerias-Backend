@@ -103,7 +103,7 @@ public class Appointment {
     }
 
     public BigDecimal getPrice() {
-        return price;
+        return calculatePrice();
     }
 
     public String getComment() {
@@ -115,16 +115,16 @@ public class Appointment {
     }
 
     public int getPoints() {
-        return points;
+        return calculatePoints();
     }
 
     public int calculatePoints() {
         if (reward == null) {
-            double points = this.service.getPrice().doubleValue() * POINTS_MULTIPLIER;
-            return this.points = (int) points;
+            this.points = (int) Math.floor(this.getPrice().intValue() * POINTS_MULTIPLIER);
+            return this.points;
+        } else {
+            return 0;
         }
-
-        return 0;
     }
 
     public Reward getReward() {
@@ -133,6 +133,8 @@ public class Appointment {
 
     public void setReward(Reward reward) {
         this.reward = reward;
+        this.calculatePoints();
+        this.calculatePrice();
     }
 
     public ServiceComponent getService() {
@@ -172,16 +174,15 @@ public class Appointment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
-        return Objects.equals(startTime, that.startTime) && Objects.equals(comment, that.comment)
-                && Objects.equals(user, that.user) && Objects.equals(service, that.service)
-                && Objects.equals(reward, that.reward) && Objects.equals(hairdresser, that.hairdresser);
+        return Objects.equals(startTime, that.startTime) && Objects.equals(user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startTime, comment, user, service, reward, hairdresser);
+        return Objects.hash(startTime, user);
     }
 
+    /*
     @Override
     public String toString() {
         return "Appointment{" +
@@ -198,4 +199,5 @@ public class Appointment {
                 ", hairdresser=" + hairdresser +
                 '}';
     }
+     */
 }

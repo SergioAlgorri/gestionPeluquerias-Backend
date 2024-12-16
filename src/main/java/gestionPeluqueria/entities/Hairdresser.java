@@ -122,6 +122,7 @@ public class Hairdresser {
         return Objects.hash(openingTime, closingTime, address, telephone);
     }
 
+    /*
     @Override
     public String toString() {
         return "Hairdresser{" +
@@ -135,4 +136,5 @@ public class Hairdresser {
                 ", appointments=" + appointments +
                 '}';
     }
+     */
 }

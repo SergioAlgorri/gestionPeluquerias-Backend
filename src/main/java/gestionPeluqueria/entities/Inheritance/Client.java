@@ -17,28 +17,37 @@ public class Client extends User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Appointment> appointments = new ArrayList<>();
-    @Transient
+    @OneToMany
+    @JoinTable(name="appointments_history",
+            joinColumns=@JoinColumn(name="client_id"),
+            inverseJoinColumns=@JoinColumn(name="appointment_id"))
     private List<Appointment> history = new ArrayList<>();
 
     public Client() {
-        this.points = 0;
+        // this.points = 0;
         this.setRole(Role.CLIENT);
     }
 
     public Client(String name, String firstSurname, String secondSurname, String email, String password,
                   LocalDate birthDate, String telephone) {
         super(name, firstSurname, secondSurname, email, password, birthDate, telephone);
-        this.points = 0;
+        // this.points = 0;
         this.setRole(Role.CLIENT);
     }
 
     public int getPoints() {
-        return points;
+        return this.points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public void addPoints(int points) {
         this.points += points;
     }
+
+    public void subtractPoint(int points) { this.points -= points; }
 
     public List<Appointment> getHistory() {
         return history;
