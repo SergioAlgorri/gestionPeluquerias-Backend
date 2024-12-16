@@ -1,24 +1,28 @@
 package gestionPeluqueria.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppointmentDTO {
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String userName;
     private String serviceName;
     private String rewardName;
     private String employeeName;
     private BigDecimal price;
 
-    public AppointmentDTO(LocalDateTime startTime, LocalDateTime endTime, String serviceName, String rewardName,
+    public AppointmentDTO(LocalDateTime startTime, LocalDateTime endTime, String username, String serviceName,
                           String employeeName, BigDecimal price) {
         this.startTime = startTime;
         this.endTime = endTime;
+        this.userName = username;
         this.serviceName = serviceName;
-        this.rewardName = rewardName;
         this.employeeName = employeeName;
         this.price = price;
     }
@@ -37,6 +41,14 @@ public class AppointmentDTO {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getServiceName() {

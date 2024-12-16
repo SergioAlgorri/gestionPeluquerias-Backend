@@ -1,49 +1,36 @@
 package gestionPeluqueria.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import gestionPeluqueria.entities.Hairdresser;
 import gestionPeluqueria.entities.Role;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserEmployeeDTO {
 
-    private String name;
-    private String firstSurname;
-    private String secondSurname;
+    private Role role;
+    private String fullName;
     private String email;
     private String password;
     private LocalDate birthDate;
     private String telephone;
-    private Role role;
+    private Integer points;
+    private List<AppointmentDTO> appointments = new ArrayList<>();
+    private List<AppointmentDTO> history = new ArrayList<>();
     private HairdresserDTO hairdresser;
-    private List<AppointmentDTO> appointments;
 
     public UserEmployeeDTO() {
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFirstSurname() {
-        return firstSurname;
-    }
-
-    public void setFirstSurname(String firstSurname) {
-        this.firstSurname = firstSurname;
-    }
-
-    public String getSecondSurname() {
-        return secondSurname;
-    }
-
-    public void setSecondSurname(String secondSurname) {
-        this.secondSurname = secondSurname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -78,6 +65,14 @@ public class UserEmployeeDTO {
         this.telephone = telephone;
     }
 
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -94,7 +89,23 @@ public class UserEmployeeDTO {
         this.hairdresser = hairdresser;
     }
 
+    public List<AppointmentDTO> getAppointments() {
+        return appointments;
+    }
+
     public void addAppointment(AppointmentDTO appointmentDTO) {
         this.appointments.add(appointmentDTO);
+    }
+
+    public List<AppointmentDTO> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<AppointmentDTO> appointments) {
+        this.history = appointments;
+    }
+
+    public void addHistoryAppointment(AppointmentDTO appointmentDTO) {
+        this.history.add(appointmentDTO);
     }
 }

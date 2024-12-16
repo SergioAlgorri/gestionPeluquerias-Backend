@@ -95,17 +95,17 @@ public class HairdresserCompany {
         return Objects.hashCode(name);
     }
 
+    /*
     @Override
     public String toString() {
         return "HairdresserCompany{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", hairdressers=" + hairdressers +
-                /*
                 ", clients=" + clients +
                 ", services=" + services +
                 ", rewards=" + rewards +
-                 */
                 '}';
     }
+    */
 }
