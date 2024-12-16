@@ -48,11 +48,11 @@ public class UserControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        client1 = new User("Sergio", "Algorri", "Ruiz", "sergio@gmail.com",
+        client1 = new Client("Sergio", "Algorri", "Ruiz", "sergio@gmail.com",
                 "sergio123", LocalDate.of(2002,7,14), "667123821");
         client1.setId(1);
         client1.setRole(Role.CLIENT);
-        client2 = new User("Lucía", "Ruiz", "Ruiz", "luciarr@gmail.com",
+        client2 = new Client("Lucía", "Ruiz", "Ruiz", "luciarr@gmail.com",
                 "lucia1990", LocalDate.of(1990,10,29), "612521515");
         client2.setId(2);
         client2.setRole(Role.CLIENT);
@@ -93,7 +93,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.content[0].name").value("Sergio"));
+                .andExpect(jsonPath("$.content[0].fullName").value("Sergio Algorri Ruiz"));
 
         // Filtrar usuarios por email: RETURN 200 OK
         Page<User> listByEmail = new PageImpl<>(List.of(client2));

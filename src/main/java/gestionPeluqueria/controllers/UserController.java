@@ -2,8 +2,6 @@ package gestionPeluqueria.controllers;
 
 import gestionPeluqueria.dto.RequestUserDTO;
 import gestionPeluqueria.dto.UserEmployeeDTOAssembler;
-import gestionPeluqueria.entities.Inheritance.Client;
-import gestionPeluqueria.entities.Inheritance.Employee;
 import gestionPeluqueria.entities.Inheritance.User;
 import gestionPeluqueria.entities.Role;
 import gestionPeluqueria.services.impl.UserServiceImpl;
@@ -39,13 +37,7 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            Page<Object> usersList = users.map(user -> {
-                if (user instanceof Employee) {
-                    return UserEmployeeDTOAssembler.generateDTO((Employee) user);
-                } else {
-                    return user;
-                }
-            });
+            Page<Object> usersList = users.map(UserEmployeeDTOAssembler::generateDTO);
             return new ResponseEntity<>(usersList, HttpStatus.OK);
         } catch (Exception e ) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -60,11 +52,7 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            if (user instanceof Client) {
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(UserEmployeeDTOAssembler.generateDTO((Employee) user), HttpStatus.OK);
-            }
+            return new ResponseEntity<>(UserEmployeeDTOAssembler.generateDTO(user), HttpStatus.OK);
         } catch (Exception e ) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -78,12 +66,7 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 
-            if (userCreated instanceof Employee) {
-                return ResponseEntity.status(HttpStatus.CREATED).
-                        body(UserEmployeeDTOAssembler.generateDTO((Employee) userCreated));
-            }
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
+            return ResponseEntity.status(HttpStatus.CREATED).body(UserEmployeeDTOAssembler.generateDTO(userCreated));
         } catch (Exception e ) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

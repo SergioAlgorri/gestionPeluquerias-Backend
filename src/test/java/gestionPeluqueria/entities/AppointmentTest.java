@@ -107,6 +107,7 @@ public class AppointmentTest {
 
     @Test
     void testGetAndSetReward() {
+        emptyAppointment.setService(mockService);
         emptyAppointment.setReward(mockReward);
         assertEquals(mockReward, emptyAppointment.getReward(),
                 "The reward should be equal to the expected value");
