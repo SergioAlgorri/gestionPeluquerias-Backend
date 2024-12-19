@@ -28,10 +28,6 @@ public class AppointmentController {
                                                         @RequestParam(required = false) LocalDate date,
                                                         @PathVariable("idPeluqueria") long idHairdresser) {
         try {
-            if (date == null) {
-                date = LocalDate.now();
-            }
-
             List<Appointment> appointments = appointmentService.findAll(idHairdresser, idEmployee, date);
 
             if (appointments == null) {
@@ -76,7 +72,6 @@ public class AppointmentController {
                                                        @RequestParam boolean hasReward) {
         try {
             appointmentService.closeAppointment(idHairdresser, idAppointment, hasReward);
-
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -94,6 +89,10 @@ public class AppointmentController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
+            if (appointments.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
             List<AppointmentDTO> result = appointments.stream()
                     .map(AppointmentDTOAssembler::generateDTO)
                     .collect(Collectors.toList());
@@ -107,7 +106,7 @@ public class AppointmentController {
     public ResponseEntity<AppointmentDTO> getUserAppointment (@PathVariable("idUsuario") long idUser,
                                            @PathVariable("idCita") long idAppointment) {
         try {
-            Appointment appointment = appointmentService.finById(idUser, idAppointment);
+            Appointment appointment = appointmentService.findById(idUser, idAppointment);
 
             if (appointment == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -168,6 +167,4 @@ public class AppointmentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 }

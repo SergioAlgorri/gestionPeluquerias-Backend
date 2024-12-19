@@ -27,8 +27,8 @@ public class UserEmployeeDTOAssembler {
                 // Cita actual. Si user fuese nulo significa que está en el historial
                 if (a.getUser() != null) {
                     employeeName = concatFullName(a.getEmployee());
-                    AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), userName,
-                            a.getService().getName(), employeeName, a.getPrice());
+                    AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), a.getComment(),
+                            userName, a.getService().getName(), employeeName, a.getPrice());
                     if (a.getReward() != null) {
                         appointmentDTO.setRewardName(a.getReward().getName());
                     }
@@ -39,8 +39,8 @@ public class UserEmployeeDTOAssembler {
 
             for (Appointment a: ((Client) user).getHistory()) {
                 employeeName = concatFullName(a.getEmployee());
-                AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), userName,
-                        a.getService().getName(), employeeName, a.getPrice());
+                AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), a.getComment(),
+                        userName, a.getService().getName(), employeeName, a.getPrice());
                 if (a.getReward() != null) {
                     appointmentDTO.setRewardName(a.getReward().getName());
                 }
@@ -58,8 +58,8 @@ public class UserEmployeeDTOAssembler {
                 // Cita actual. Si user fuese nulo significa que está en el historial
                 if (a.getUser() != null) {
                     userName = concatFullName(a.getUser());
-                    AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), userName,
-                            a.getService().getName(), employeeName, a.getPrice());
+                    AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), a.getComment(),
+                            userName, a.getService().getName(), employeeName, a.getPrice());
                     if (a.getReward() != null) {
                         appointmentDTO.setRewardName(a.getReward().getName());
                     }

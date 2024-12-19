@@ -43,24 +43,27 @@ public class AppointmentServiceImpl implements IAppointmentService {
             return null;
         }
 
+        if (date == null) {
+            date = LocalDate.now();
+        }
+
         LocalDateTime startDay = date.atStartOfDay();
         LocalDateTime endDay = date.atTime(23, 59, 59);
 
         if (idEmployee != null) {
-            User employee = userRepository.findById(idEmployee).orElse(null);
-            if (employee == null) {
+            User employee = userRepository.findById(idEmployee.longValue());
+            if (!(employee instanceof Employee)) {
                 return null;
-            }
-
-            for (Employee e: hairdresser.getEmployees()) {
-                if (e.equals(employee)) {
-                    return appointmentRepository.findByHairdresserAndEmployeeId(idHairdresser, idEmployee,
-                            startDay, endDay);
+            } else {
+                for (Employee e: hairdresser.getEmployees()) {
+                    if (e.equals(employee)) {
+                        return appointmentRepository.findByHairdresserAndEmployeeId(idHairdresser, idEmployee,
+                                startDay, endDay);
+                    }
                 }
             }
-
-            return null;
         }
+
 
         return appointmentRepository.findByHairdresser(hairdresser.getId(), startDay, endDay);
     }
@@ -77,7 +80,7 @@ public class AppointmentServiceImpl implements IAppointmentService {
     }
 
     @Override
-    public Appointment finById(long idUser, long idAppointment) {
+    public Appointment findById(long idUser, long idAppointment) {
         User user = userRepository.findById(idUser);
         if (user == null) {
             return null;
@@ -122,7 +125,7 @@ public class AppointmentServiceImpl implements IAppointmentService {
         // Asignar empleado
         Employee employee;
         if (request.getIdEmployee() != null) {
-            User employeeSelected = userRepository.findById(request.getIdEmployee()).orElse(null);
+            User employeeSelected = userRepository.findById(request.getIdEmployee().longValue());
             if (employeeSelected == null) {
                 return null;
             }
@@ -280,7 +283,8 @@ public class AppointmentServiceImpl implements IAppointmentService {
         hairdresserRepository.save(hairdresser);
     }
 
-    private boolean checkAvailability(Hairdresser hairdresser, LocalDateTime startTime, LocalDateTime endTime) {
+    // Public para el test
+    public boolean checkAvailability(Hairdresser hairdresser, LocalDateTime startTime, LocalDateTime endTime) {
         LocalDateTime startDay = startTime.toLocalDate().atStartOfDay();
         LocalDateTime endDay = endTime.toLocalDate().atTime(23, 59, 59);
         List<Appointment> existingAppointments =
@@ -305,7 +309,8 @@ public class AppointmentServiceImpl implements IAppointmentService {
         return true;
     }
 
-    private boolean checkEmployeeAvailability(long idHairdresser, Employee employee, LocalDateTime startTime,
+    // Public para el test
+    public boolean checkEmployeeAvailability(long idHairdresser, Employee employee, LocalDateTime startTime,
                                               LocalDateTime endTime) {
         LocalDateTime startDay = startTime.toLocalDate().atStartOfDay();
         LocalDateTime endDay = endTime.toLocalDate().atTime(23, 59, 59);

@@ -9,7 +9,7 @@ public class AppointmentDTOAssembler {
         String userName = concatFullName(appointment.getUser());
         String employeeName = concatFullName(appointment.getEmployee());
         AppointmentDTO result = new AppointmentDTO(
-                appointment.getStartTime(), appointment.getEndTime(), userName,
+                appointment.getStartTime(), appointment.getEndTime(), appointment.getComment(), userName,
                 appointment.getService().getName(), employeeName, appointment.getPrice()
         );
 

@@ -11,16 +11,18 @@ public class AppointmentDTO {
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String comment;
     private String userName;
     private String serviceName;
     private String rewardName;
     private String employeeName;
     private BigDecimal price;
 
-    public AppointmentDTO(LocalDateTime startTime, LocalDateTime endTime, String username, String serviceName,
-                          String employeeName, BigDecimal price) {
+    public AppointmentDTO(LocalDateTime startTime, LocalDateTime endTime, String comment,
+                          String username, String serviceName, String employeeName, BigDecimal price) {
         this.startTime = startTime;
         this.endTime = endTime;
+        this.comment = comment;
         this.userName = username;
         this.serviceName = serviceName;
         this.employeeName = employeeName;
@@ -41,6 +43,14 @@ public class AppointmentDTO {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getUserName() {

@@ -20,12 +20,13 @@ public class HairdresserDTOAssembler {
         for (Appointment a: hairdresser.getAppointments()) {
             LocalDateTime startTime = a.getStartTime();
             LocalDateTime endTime = a.getEndTime();
+            String comment = a.getComment();
             String userName = concatFullName(a.getUser());
             String serviceName = a.getService().getName();
             String employeeName = concatFullName(a.getEmployee());
             BigDecimal price = a.getPrice();
 
-            AppointmentDTO appointmentDTO = new AppointmentDTO(startTime, endTime, userName, serviceName,
+            AppointmentDTO appointmentDTO = new AppointmentDTO(startTime, endTime, comment, userName, serviceName,
                     employeeName, price);
             if (a.getReward() != null) {
                 appointmentDTO.setRewardName(a.getReward().getName());

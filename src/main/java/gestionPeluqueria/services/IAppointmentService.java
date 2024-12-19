@@ -10,7 +10,7 @@ public interface IAppointmentService {
 
     List<Appointment> findAll(long idHairdresser, Long idEmployee, LocalDate date);
     List<Appointment> findAllAppointmentsUser(long idUser);
-    Appointment finById(long idUser, long idAppointment);
+    Appointment findById(long idUser, long idAppointment);
     Appointment createAppointment(long idHairdresser, RequestAppointmentDTO appointment);
     Appointment updateAppointment(long idUser, long idAppointment, Appointment appointment);
     void deleteAppointment(long idUser, long idAppointment);
