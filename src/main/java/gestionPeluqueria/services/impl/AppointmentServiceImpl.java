@@ -10,6 +10,7 @@ import gestionPeluqueria.entities.Reward;
 import gestionPeluqueria.entities.composite.ServiceComponent;
 import gestionPeluqueria.repositories.*;
 import gestionPeluqueria.services.IAppointmentService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -272,6 +273,7 @@ public class AppointmentServiceImpl implements IAppointmentService {
         // user.getHistory().add(appointment);
         appointment.setUser(null);
         appointment.setHairdresser(null);
+        appointment.setAttended(true);
         // appointment.setEmployee(null);
         // user.getAppointments().remove(appointment);
         employee.getActiveAppointments().remove(appointment);
@@ -362,5 +364,16 @@ public class AppointmentServiceImpl implements IAppointmentService {
         }
 
         return employeeSelected;
+    }
+
+    // Se ejecuta una vez al día a las 00:00:00
+    @Scheduled(cron = "59 59 23 * * MON-SUN")
+    public void deleteExpiredAppointments() {
+        LocalDateTime endTime = LocalDateTime.now();
+        List<Appointment> expiredAppointments = appointmentRepository.findByStartTimeBeforeAndAttendedFalse(endTime);
+
+        if (!expiredAppointments.isEmpty()) {
+            appointmentRepository.deleteAll(expiredAppointments);
+        }
     }
 }

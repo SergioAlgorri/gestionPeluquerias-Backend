@@ -47,12 +47,14 @@ public class Appointment {
     @JoinColumn(name = "hairdresser_id")
     private Hairdresser hairdresser;
 
+    private boolean attended;
+
     @Transient
     private int points;
 
     // Empty constructor
     public Appointment() {
-
+        this.attended = false;
     }
 
     public Appointment(LocalDateTime startTime, String comment, User user, Employee employee,
@@ -68,6 +70,7 @@ public class Appointment {
         this.endTime = calculateEndingTime(startTime);
         this.price = calculatePrice();
         this.points = calculatePoints();
+        this.attended = false;
     }
 
     public long getId() {
@@ -167,6 +170,14 @@ public class Appointment {
 
     public void setHairdresser(Hairdresser hairdresser) {
         this.hairdresser = hairdresser;
+    }
+
+    public boolean isAttended() {
+        return attended;
+    }
+
+    public void setAttended(boolean attended) {
+        this.attended = attended;
     }
 
     @Override
