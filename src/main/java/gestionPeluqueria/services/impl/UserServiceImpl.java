@@ -2,6 +2,7 @@ package gestionPeluqueria.services.impl;
 
 import gestionPeluqueria.dto.RequestUserDTO;
 import gestionPeluqueria.entities.Hairdresser;
+import gestionPeluqueria.entities.Inheritance.Admin;
 import gestionPeluqueria.entities.Inheritance.Client;
 import gestionPeluqueria.entities.Inheritance.Employee;
 import gestionPeluqueria.entities.Inheritance.User;
@@ -12,6 +13,7 @@ import gestionPeluqueria.services.IUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,10 +23,13 @@ public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
     private final HairdresserRepository hairdresserRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, HairdresserRepository hairdresserRepository) {
+    public UserServiceImpl(UserRepository userRepository, HairdresserRepository hairdresserRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.hairdresserRepository = hairdresserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -57,22 +62,28 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    // Método de creación de usuarios (CLIENT O EMPLOYEE) solo disponible para el usuario con rol ADMIN
+    // Método de creación de usuarios (CLIENT, EMPLOYEE o ADMIN) solo disponible para el usuario con rol ADMIN
     public User createUser(RequestUserDTO user) {
         User userCreated;
+        // Encriptamos la contraseña
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
         if (user.getRole().equals(Role.CLIENT)) {
             // Crear usuario cliente
             userCreated = new Client(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
-                    user.getPassword(), user.getBirthDate(), user.getTelephone());
+                    encodedPassword, user.getBirthDate(), user.getTelephone());
         } else if (user.getRole().equals(Role.EMPLOYEE)) {
             // Crear usuario empleado
             userCreated = new Employee(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
-                    user.getPassword(), user.getBirthDate(), user.getTelephone());
+                    encodedPassword, user.getBirthDate(), user.getTelephone());
             Hairdresser hairdresser = hairdresserRepository.findById(user.getIdHairdresser());
             ((Employee) userCreated).setHairdresser(hairdresser);
             hairdresser.addEmployee((Employee) userCreated);
             hairdresserRepository.save(hairdresser);
+        } else if (user.getRole().equals(Role.ADMIN)) {
+            userCreated = new Admin(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
+                    encodedPassword, user.getBirthDate(), user.getTelephone());
         } else {
+            // Rol no existente
             return null;
         }
 

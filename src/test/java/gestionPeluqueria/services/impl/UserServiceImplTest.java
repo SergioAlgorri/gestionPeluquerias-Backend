@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,6 +33,8 @@ public class UserServiceImplTest {
     private UserRepository mockUserRepository;
     @Mock
     private HairdresserRepository mockHairdresserRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -45,7 +48,7 @@ public class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(mockUserRepository, mockHairdresserRepository);
+        userService = new UserServiceImpl(mockUserRepository, mockHairdresserRepository, passwordEncoder);
 
         client1 = new Client("Sergio", "Algorri", "Ruiz", "sergio@gmail.com",
                 "sergio123", LocalDate.of(2002,7,14), "667123821");
