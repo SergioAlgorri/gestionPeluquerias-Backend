@@ -14,7 +14,8 @@ public class JwtUtil {
 
     public String generateToken(User user) {
         Date date = new Date();
-        Date expirationDate = new Date(date.getTime() + 300000);
+        // Tiempo de expiración de 1 hora
+        Date expirationDate = new Date(date.getTime() + 3600000);
 
         return Jwts.builder()
                 .setSubject(user.getEmail())

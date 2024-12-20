@@ -6,7 +6,13 @@ import gestionPeluqueria.entities.Inheritance.User;
 public class AppointmentDTOAssembler {
 
     public static AppointmentDTO generateDTO(Appointment appointment) {
-        String userName = concatFullName(appointment.getUser());
+        String userName;
+        if (appointment.getUser() != null) {
+            userName = concatFullName(appointment.getUser());
+        } else {
+            userName = null;
+        }
+
         String employeeName = concatFullName(appointment.getEmployee());
         AppointmentDTO result = new AppointmentDTO(
                 appointment.getStartTime(), appointment.getEndTime(), appointment.getComment(), userName,
