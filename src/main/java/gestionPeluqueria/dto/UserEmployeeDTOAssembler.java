@@ -1,6 +1,7 @@
 package gestionPeluqueria.dto;
 
 import gestionPeluqueria.entities.Appointment;
+import gestionPeluqueria.entities.Inheritance.Admin;
 import gestionPeluqueria.entities.Inheritance.Client;
 import gestionPeluqueria.entities.Inheritance.Employee;
 import gestionPeluqueria.entities.Inheritance.User;
@@ -47,7 +48,7 @@ public class UserEmployeeDTOAssembler {
 
                 result.addHistoryAppointment(appointmentDTO);
             }
-        } else {
+        } else if (user instanceof Employee) {
             HairdresserDTO hairdresserDTO = HairdresserDTOAssembler.generateDTO(((Employee) user).getHairdresser());
             hairdresserDTO.setEmployees(null);
             hairdresserDTO.setAppointments(null);
@@ -67,6 +68,10 @@ public class UserEmployeeDTOAssembler {
                     result.addAppointment(appointmentDTO);
                 }
             }
+        } else {
+            result.setHistory(null);
+            result.setAppointments(null);
+            return result;
         }
 
         return result;

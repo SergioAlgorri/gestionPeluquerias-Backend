@@ -93,6 +93,10 @@ public class UserEmployeeDTO {
         return appointments;
     }
 
+    public void setAppointments(List<AppointmentDTO> appointments) {
+        this.appointments = appointments;
+    }
+
     public void addAppointment(AppointmentDTO appointmentDTO) {
         this.appointments.add(appointmentDTO);
     }
