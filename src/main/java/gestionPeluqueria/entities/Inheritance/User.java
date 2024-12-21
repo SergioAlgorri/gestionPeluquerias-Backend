@@ -18,25 +18,46 @@ public class User {
 
     @Column
     private String name;
+
     @Column(name = "first_surname")
     private String firstSurname;
+
     @Column(name = "second_surname")
     private String secondSurname;
+
     @Column
     private String email;
+
     @Column
     private String password;
+
     @Column(name = "birth_date")
     private LocalDate birthDate;
+
     @Column
     private String telephone;
+
     @Enumerated(EnumType.STRING)
     @Column(insertable=false, updatable=false)
     private Role role;
 
+    /**
+     * Empty constructor.
+     */
     public User() {
+
     }
 
+    /**
+     * Parameterised constructor.
+     * @param name name of the user.
+     * @param firstSurname first surname of the user.
+     * @param secondSurname second surname of the user.
+     * @param email email of the user.
+     * @param password password (encoded) for the user.
+     * @param birthDate birth date of the user.
+     * @param telephone telephone of the user.
+     */
     public User(String name, String firstSurname, String secondSurname, String email, String password,
                 LocalDate birthDate, String telephone) {
         this.name = name;
@@ -47,6 +68,8 @@ public class User {
         this.birthDate = birthDate;
         this.telephone = telephone;
     }
+
+    // Getters y Setter de los atributos de la clase
 
     public long getId() {
         return id;
@@ -118,6 +141,14 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    /**
+     * Method to concatenate the full name.
+     * @return the full name of the user.
+     */
+    public String concatFullName() {
+        return name + " " + firstSurname + " " + secondSurname;
     }
 
     @Override

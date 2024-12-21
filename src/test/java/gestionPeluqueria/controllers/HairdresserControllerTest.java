@@ -1,7 +1,5 @@
 package gestionPeluqueria.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import gestionPeluqueria.entities.Hairdresser;
 import gestionPeluqueria.entities.HairdresserCompany;
 import gestionPeluqueria.services.impl.HairdresserServiceImpl;
@@ -94,14 +92,14 @@ public class HairdresserControllerTest {
         when(mockHairdresserService.createHairdresser(hairdresser)).thenReturn(hairdresser);
         mockMvc.perform(MockMvcRequestBuilders.post("/peluquerias")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(asJsonString(hairdresser)))
+                .content(TestUtils.asJsonString(hairdresser)))
                 .andExpect(status().isCreated());
 
         // Caso No Válido: Se crea una peluquería existente (CONFLICT)
         when(mockHairdresserService.createHairdresser(hairdresser1)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.post("/peluquerias")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(asJsonString(hairdresser1)))
+                .content(TestUtils.asJsonString(hairdresser1)))
                 .andExpect(status().isConflict());
     }
 
@@ -115,14 +113,14 @@ public class HairdresserControllerTest {
         when(mockHairdresserService.updateHairdresser(hairdresser1.getId(), update)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.put("/peluquerias/" +hairdresser1.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(update)))
+                        .content(TestUtils.asJsonString(update)))
                 .andExpect(status().isBadRequest());
 
         // Caso Válido: Peluquería Encontrada (OK)
         when(mockHairdresserService.updateHairdresser(hairdresser2.getId(), update)).thenReturn(hairdresser2);
         mockMvc.perform(MockMvcRequestBuilders.put("/peluquerias/" +hairdresser2.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(asJsonString(update)))
+                .content(TestUtils.asJsonString(update)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.telephone").value("123456789"));
     }
@@ -140,15 +138,5 @@ public class HairdresserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/peluquerias/" +hairdresser2.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNoContent());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());  // Registro de módulo para manejo de LocalTime
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException("Error serializando el objeto a JSON: " + e.getMessage(), e);
-        }
     }
 }

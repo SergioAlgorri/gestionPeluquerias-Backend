@@ -1,7 +1,5 @@
 package gestionPeluqueria.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import gestionPeluqueria.entities.Reward;
 import gestionPeluqueria.services.impl.RewardServiceImpl;
 import org.hamcrest.Matchers;
@@ -96,14 +94,14 @@ public class RewardControllerTest {
         when(mockRewardService.createReward(any(Reward.class))).thenReturn(reward3);
         mockMvc.perform(MockMvcRequestBuilders.post("/peluquerias/recompensas")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(reward3)))
+                        .content(TestUtils.asJsonString(reward3)))
                 .andExpect(status().isCreated());
 
         // Caso No Válido: Se crea una recompensa existente (CONFLICT)
         when(mockRewardService.createReward(any(Reward.class))).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.post("/peluquerias/recompensas")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(reward3)))
+                        .content(TestUtils.asJsonString(reward3)))
                 .andExpect(status().isConflict());
     }
 
@@ -117,14 +115,14 @@ public class RewardControllerTest {
         when(mockRewardService.updateReward(reward1.getId(), update)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.put("/peluquerias/recompensas/" +reward1.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(update)))
+                        .content(TestUtils.asJsonString(update)))
                 .andExpect(status().isBadRequest());
 
         // Caso Válido: Recompensa Encontrada (OK)
         when(mockRewardService.updateReward(reward2.getId(), update)).thenReturn(reward2);
         mockMvc.perform(MockMvcRequestBuilders.put("/peluquerias/recompensas/" +reward2.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(update)))
+                        .content(TestUtils.asJsonString(update)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.expirationDate").value("2026-01-01"));
     }
@@ -142,15 +140,5 @@ public class RewardControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/peluquerias/recompensas/" +reward2.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNoContent());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());  // Registro de módulo para manejo de LocalDate
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException("Error serializando el objeto a JSON: " + e.getMessage(), e);
-        }
     }
 }

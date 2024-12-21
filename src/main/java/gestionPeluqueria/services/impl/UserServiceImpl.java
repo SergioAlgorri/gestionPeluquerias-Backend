@@ -64,33 +64,20 @@ public class UserServiceImpl implements IUserService {
     @Override
     // Método de creación de usuarios (CLIENT, EMPLOYEE o ADMIN) solo disponible para el usuario con rol ADMIN
     public User createUser(RequestUserDTO user) {
-        User userCreated;
-        // Encriptamos la contraseña
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        if (user.getRole().equals(Role.CLIENT)) {
-            // Crear usuario cliente
-            userCreated = new Client(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
-                    encodedPassword, user.getBirthDate(), user.getTelephone());
-        } else if (user.getRole().equals(Role.EMPLOYEE)) {
-            // Crear usuario empleado
-            userCreated = new Employee(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
-                    encodedPassword, user.getBirthDate(), user.getTelephone());
-            Hairdresser hairdresser = hairdresserRepository.findById(user.getIdHairdresser());
-            ((Employee) userCreated).setHairdresser(hairdresser);
-            hairdresser.addEmployee((Employee) userCreated);
-            hairdresserRepository.save(hairdresser);
-        } else if (user.getRole().equals(Role.ADMIN)) {
-            userCreated = new Admin(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
-                    encodedPassword, user.getBirthDate(), user.getTelephone());
-        } else {
-            // Rol no existente
+        // Comprobamos que no existe otro usuario con el mismo email
+        if (userRepository.findByEmail(user.getEmail()) != null) {
             return null;
         }
 
-        for (User u: userRepository.findAll()) {
-            if (u.equals(userCreated)) {
-                return null;
-            }
+        // Encriptamos la contraseña
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+
+        // Creamos el usuario según el rol
+        User userCreated = createUserByRole(user, encodedPassword);
+
+        // Rol No Válido
+        if (userCreated == null) {
+            return null;
         }
 
         return userRepository.save(userCreated);
@@ -133,5 +120,30 @@ public class UserServiceImpl implements IUserService {
         }
 
         userRepository.delete(user);
+    }
+
+    // Métodos Auxiliares
+
+    private User createUserByRole(RequestUserDTO user, String encodedPassword) {
+        return switch (user.getRole()) {
+            case CLIENT -> new Client(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
+                    encodedPassword, user.getBirthDate(), user.getTelephone());
+            case EMPLOYEE -> createEmployee(user, encodedPassword);
+            case ADMIN -> new Admin(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
+                    encodedPassword, user.getBirthDate(), user.getTelephone());
+            default -> null;
+        };
+    }
+
+    private Employee createEmployee(RequestUserDTO user, String encodedPassword) {
+        Hairdresser hairdresser = hairdresserRepository.findById(user.getIdHairdresser());
+
+        Employee employee = new Employee(user.getName(), user.getFirstSurname(), user.getSecondSurname(),
+                user.getEmail(), encodedPassword, user.getBirthDate(), user.getTelephone());
+
+        employee.setHairdresser(hairdresser);
+        hairdresser.addEmployee(employee);
+        hairdresserRepository.save(hairdresser);
+        return employee;
     }
 }

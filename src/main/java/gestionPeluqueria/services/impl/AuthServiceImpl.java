@@ -6,7 +6,6 @@ import gestionPeluqueria.dto.RequestUserLoginDTO;
 import gestionPeluqueria.entities.Inheritance.Client;
 import gestionPeluqueria.entities.Inheritance.Guest;
 import gestionPeluqueria.entities.Inheritance.User;
-import gestionPeluqueria.repositories.HairdresserRepository;
 import gestionPeluqueria.repositories.UserRepository;
 import gestionPeluqueria.security.CustomUserDetails;
 import gestionPeluqueria.security.CustomUserDetailsService;
@@ -46,20 +45,21 @@ public class AuthServiceImpl implements IAuthService {
 
         // Crear usuario cliente
         userRegistered = new Client(user.getName(), user.getFirstSurname(), user.getSecondSurname(), user.getEmail(),
-                user.getPassword(), user.getBirthDate(), user.getTelephone());
+                passwordEncoder.encode(user.getPassword()), user.getBirthDate(), user.getTelephone());
 
-        userRegistered.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(userRegistered);
         return "Usuario Registrado Correctamente";
     }
 
     @Override
     public String login(RequestUserLoginDTO loginRequest) {
+        // Autenticar Usuario
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // Obtener Usuario
         CustomUserDetails userDetails =
                 (CustomUserDetails) userDetailsService.loadUserByUsername(loginRequest.getEmail());
 

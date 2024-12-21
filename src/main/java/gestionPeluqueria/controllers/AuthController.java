@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
+    private static final String ERROR_MESSAGE_REGISTER = "Usuario Ya Registrado";
+
     private final AuthServiceImpl authService;
 
     public AuthController(AuthServiceImpl authService) {
@@ -25,7 +27,7 @@ public class AuthController {
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> register(@RequestBody RequestUserDTO user) {
         String message = authService.register(user);
-        if (message.equals("Usuario Ya Regsitrado")) {
+        if (message.equals(ERROR_MESSAGE_REGISTER)) {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
 

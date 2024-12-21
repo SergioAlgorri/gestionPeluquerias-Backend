@@ -1,19 +1,18 @@
 package gestionPeluqueria.dto;
 
 import gestionPeluqueria.entities.Appointment;
-import gestionPeluqueria.entities.Inheritance.User;
 
 public class AppointmentDTOAssembler {
 
     public static AppointmentDTO generateDTO(Appointment appointment) {
         String userName;
         if (appointment.getUser() != null) {
-            userName = concatFullName(appointment.getUser());
+            userName = appointment.getUser().concatFullName();
         } else {
             userName = null;
         }
 
-        String employeeName = concatFullName(appointment.getEmployee());
+        String employeeName = appointment.getEmployee().concatFullName();
         AppointmentDTO result = new AppointmentDTO(
                 appointment.getStartTime(), appointment.getEndTime(), appointment.getComment(), userName,
                 appointment.getService().getName(), employeeName, appointment.getPrice()
@@ -24,9 +23,5 @@ public class AppointmentDTOAssembler {
         }
 
         return result;
-    }
-
-    private static String concatFullName(User u) {
-        return u.getName() + " " + u.getFirstSurname() + " " + u.getSecondSurname();
     }
 }

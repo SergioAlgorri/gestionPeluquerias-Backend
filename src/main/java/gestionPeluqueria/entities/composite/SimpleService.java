@@ -16,14 +16,21 @@ public class SimpleService extends ServiceComponent {
     @Column(name = "duration_minutes")
     private List<Integer> duration = new ArrayList<>();
 
+    /**
+     * Empty constructor.
+     */
+    public SimpleService() {
+
+    }
+
+    /**
+     * Parameterised constructor.
+     * Same constructor of the parent class by adding the price and the duration to it.
+     */
     public SimpleService(String name, String description, BigDecimal price, List<Integer> duration) {
         super(name, description);
         this.price = price;
         this.duration = duration;
-    }
-
-    public SimpleService() {
-
     }
 
     @Override

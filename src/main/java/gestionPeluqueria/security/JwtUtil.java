@@ -10,24 +10,22 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    public static final String SECRET_KEY = "my_secret_key";
-
     public String generateToken(User user) {
         Date date = new Date();
         // Tiempo de expiración de 1 hora
-        Date expirationDate = new Date(date.getTime() + 3600000);
+        Date expirationDate = new Date(date.getTime() + SecurityConstants.JWT_EXPIRATION_1_HOUR);
 
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("role", user.getRole())
                 .setIssuedAt(date)
                 .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET_KEY)
                 .compact();
     }
 
     public String extractUserEmail(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(SecurityConstants.SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean isTokenValid(String token, CustomUserDetails user) {

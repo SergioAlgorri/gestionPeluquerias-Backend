@@ -44,7 +44,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 } else {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                            "NO AUTORIZADO: Token inválido o expirado");
+                            SecurityConstants.MESSAGE_UNAUTHORIZED);
                     return;
                 }
             }
@@ -52,7 +52,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (JwtException e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "NO AUTORIZADO: Token inválido o expirado");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, SecurityConstants.MESSAGE_UNAUTHORIZED);
         }
     }
 }

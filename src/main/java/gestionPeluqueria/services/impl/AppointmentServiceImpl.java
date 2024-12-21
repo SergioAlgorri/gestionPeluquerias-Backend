@@ -67,7 +67,6 @@ public class AppointmentServiceImpl implements IAppointmentService {
             }
         }
 
-
         return appointmentRepository.findByHairdresser(hairdresser.getId(), startDay, endDay);
     }
 

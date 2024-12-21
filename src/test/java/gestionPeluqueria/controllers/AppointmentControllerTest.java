@@ -1,6 +1,5 @@
 package gestionPeluqueria.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import gestionPeluqueria.dto.RequestAppointmentDTO;
 import gestionPeluqueria.entities.Appointment;
 import gestionPeluqueria.entities.Hairdresser;
@@ -107,7 +106,7 @@ public class AppointmentControllerTest {
         when(mockAppointmentService.createAppointment(hairdresser.getId(), request)).thenReturn(appointment);
         mockMvc.perform(MockMvcRequestBuilders.post("/peluquerias/"+hairdresser.getId()+"/citas")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(request)))
+                        .content(TestUtils.asJsonString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
 
@@ -116,7 +115,7 @@ public class AppointmentControllerTest {
         when(mockAppointmentService.createAppointment(hairdresser.getId(), request2)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.post("/peluquerias/"+hairdresser.getId()+"/citas")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(request)))
+                        .content(TestUtils.asJsonString(request)))
                 .andExpect(status().isConflict());
     }
 
@@ -214,14 +213,5 @@ public class AppointmentControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/usuarios/"+client.getId()
                         +"/citas/"+appointment.getId()))
                 .andExpect(status().isNoContent());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException("Error serializando el objeto a JSON: " + e.getMessage(), e);
-        }
     }
 }

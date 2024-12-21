@@ -24,17 +24,29 @@ public abstract  class ServiceComponent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected long id;
+
     protected String name;
+
     protected String description;
 
+    /**
+     * Empty constructor.
+     */
+    public ServiceComponent() {
+
+    }
+
+    /**
+     * Parameterised constructor.
+     * @param name name of the service.
+     * @param description description of the service.
+     */
     public ServiceComponent(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public ServiceComponent() {
-
-    }
+    // Getters y Setter de los atributos de la clase
 
     public long getId() {
         return id;
@@ -60,10 +72,34 @@ public abstract  class ServiceComponent {
         this.description = description;
     }
 
+    /**
+     * Method that returns the price of the service.
+     * @return price of the service.
+     */
     public abstract BigDecimal getPrice();
+
+    /**
+     * Method that returns an array with the durations of the service.
+     * @return an array of durations of the service.
+     */
     public abstract List<Integer> getDuration ();
+
+    /**
+     * Method that returns the total duration of the service.
+     * @return total duration of the service.
+     */
     public abstract int getTotalDuration();
+
+    /**
+     * Method initialising the price of the service.
+     * @param price price of the service.
+     */
     public abstract void setPrice(BigDecimal price);
+
+    /**
+     * method initialising the array of durations of the service
+     * @param duration array with the durations of the service.
+     */
     public abstract void setDuration(List<Integer> duration);
 
     @Override

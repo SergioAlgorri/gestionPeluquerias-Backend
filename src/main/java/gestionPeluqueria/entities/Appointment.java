@@ -14,7 +14,8 @@ import java.util.Objects;
 @Table(name = "appointments")
 public class Appointment {
 
-    private static final double POINTS_MULTIPLIER = 0.1; // 10%
+    // Factor multiplicador de puntos por cada reserva (10%)
+    private static final double POINTS_MULTIPLIER = 0.1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,9 +23,12 @@ public class Appointment {
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
+
     @Column(name = "end_time")
     private LocalDateTime endTime;
+
     private BigDecimal price;
+
     private String comment;
 
     @ManyToOne
@@ -52,11 +56,23 @@ public class Appointment {
     @Transient
     private int points;
 
-    // Empty constructor
+    /**
+     * Empty constructor.
+     */
     public Appointment() {
         this.attended = false;
     }
 
+    /**
+     * Parameterised constructor.
+     * @param startTime start time of the appointment.
+     * @param comment comment of the appointment.
+     * @param user user of the appointment.
+     * @param employee empployee of the appointment.
+     * @param service service of the appointment.
+     * @param reward reward of the appointment.
+     * @param hairdresser hairdresser of the appointment.
+     */
     public Appointment(LocalDateTime startTime, String comment, User user, Employee employee,
                        ServiceComponent service, Reward reward, Hairdresser hairdresser) {
         this.startTime = startTime;
@@ -67,11 +83,13 @@ public class Appointment {
         this.reward = reward;
         this.hairdresser = hairdresser;
 
-        this.endTime = calculateEndingTime(startTime);
+        this.endTime = calculateEndingTime();
         this.price = calculatePrice();
         this.points = calculatePoints();
         this.attended = false;
     }
+
+    // Getters y Setter de los atributos de la clase
 
     public long getId() {
         return id;
@@ -93,18 +111,6 @@ public class Appointment {
         return endTime;
     }
 
-    public LocalDateTime calculateEndingTime(LocalDateTime endingTime) {
-       return this.endTime = startTime.plusMinutes(service.getTotalDuration());
-    }
-
-    public BigDecimal calculatePrice() {
-        if (reward != null) {
-            return service.getPrice().multiply(reward.getDiscountAmount()).setScale(2, RoundingMode.DOWN);
-        }
-
-        return service.getPrice().setScale(2, RoundingMode.DOWN);
-    }
-
     public BigDecimal getPrice() {
         return calculatePrice();
     }
@@ -119,15 +125,6 @@ public class Appointment {
 
     public int getPoints() {
         return calculatePoints();
-    }
-
-    public int calculatePoints() {
-        if (reward == null) {
-            this.points = (int) Math.floor(this.getPrice().intValue() * POINTS_MULTIPLIER);
-            return this.points;
-        } else {
-            return 0;
-        }
     }
 
     public Reward getReward() {
@@ -178,6 +175,39 @@ public class Appointment {
 
     public void setAttended(boolean attended) {
         this.attended = attended;
+    }
+
+    /**
+     * Method that calculates the end time of an appointment.
+     * @return end time of the appointment.
+     */
+    public LocalDateTime calculateEndingTime() {
+        return this.endTime = startTime.plusMinutes(service.getTotalDuration());
+    }
+
+    /**
+     * Method that calculates the price of an appointment
+     * @return price of the appointment
+     */
+    public BigDecimal calculatePrice() {
+        if (reward != null) {
+            return service.getPrice().multiply(reward.getDiscountAmount()).setScale(2, RoundingMode.DOWN);
+        }
+
+        return service.getPrice().setScale(2, RoundingMode.DOWN);
+    }
+
+    /**
+     * Method for calculating the appointment points that the client can earn.
+     * @return points that the client can earn.
+     */
+    public int calculatePoints() {
+        if (reward == null) {
+            this.points = (int) Math.floor(this.getPrice().intValue() * POINTS_MULTIPLIER);
+            return this.points;
+        } else {
+            return 0;
+        }
     }
 
     @Override

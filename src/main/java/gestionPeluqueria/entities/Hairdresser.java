@@ -18,9 +18,12 @@ public class Hairdresser {
 
     @Column(name = "opening_time")
     private LocalTime openingTime;
+
     @Column(name = "closing_time")
     private LocalTime closingTime;
+
     private String address;
+
     private String telephone;
 
     @ManyToOne
@@ -33,16 +36,28 @@ public class Hairdresser {
     @OneToMany(mappedBy = "hairdresser")
     private List<Appointment> appointments = new ArrayList<>();
 
+    /**
+     * Empty constructor.
+     */
     public Hairdresser() {
 
     }
 
+    /**
+     * Parameterised constructor.
+     * @param openingTime opening time of the hairdresser.
+     * @param closingTime closing time of the hairdresser.
+     * @param address address of the hairdresser.
+     * @param telephone telephone of the hairdresser.
+     */
     public Hairdresser(LocalTime openingTime, LocalTime closingTime, String address, String telephone) {
         this.openingTime = openingTime;
         this.closingTime = closingTime;
         this.address = address;
         this.telephone = telephone;
     }
+
+    // Getters y Setter de los atributos de la clase
 
     public long getId() {
         return id;
