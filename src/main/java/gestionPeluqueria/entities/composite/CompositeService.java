@@ -15,13 +15,22 @@ public class CompositeService extends ServiceComponent {
             inverseJoinColumns = @JoinColumn(name = "service_id"))
     private List<ServiceComponent> services = new ArrayList<>();
 
+    /**
+     * Empty constructor.
+     */
+    public CompositeService() {
+
+    }
+
+    /**
+     * Parameterised constructor.
+     * Same constructor of the parent class.
+     */
     public CompositeService(String name, String description) {
         super(name, description);
     }
 
-    public CompositeService() {
-
-    }
+    // Getters y Setter de los atributos de la clase
 
     public void addService(ServiceComponent service) {
         services.add(service);

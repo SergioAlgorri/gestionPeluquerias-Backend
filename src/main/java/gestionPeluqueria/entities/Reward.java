@@ -1,4 +1,5 @@
 package gestionPeluqueria.entities;
+
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -14,21 +15,36 @@ public class Reward {
     private long id;
 
     private String name;
+
     private BigDecimal discount;
+
     private Integer points;
+
     @Column(name = "expiration_date")
     private LocalDate expirationDate;
 
+    /**
+     * Empty constructor.
+     */
     public Reward() {
 
     }
 
+    /**
+     * Parameterised constructor.
+     * @param name name of the reward
+     * @param discount discount of the reward.
+     * @param points points the reward costs.
+     * @param expirationDate expiration date of the reward.
+     */
     public Reward(String name, BigDecimal discount, Integer points, LocalDate expirationDate) {
         this.name = name;
         this.discount = discount;
         this.points = points;
         this.expirationDate = expirationDate;
     }
+
+    // Getters y Setter de los atributos de la clase
 
     public long getId() {
         return id;

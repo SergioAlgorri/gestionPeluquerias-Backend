@@ -20,15 +20,24 @@ public class Employee extends User {
     @OneToMany(mappedBy = "employee")
     private List<Appointment> activeAppointments = new ArrayList<>();
 
+    /**
+     * Empty constructor.
+     */
     public Employee() {
         this.setRole(Role.EMPLOYEE);
     }
 
+    /**
+     * Parameterised constructor.
+     * Same constructor of the parent class by adding the CLIENT role and the points to it.
+     */
     public Employee(String name, String firstSurname, String secondSurname, String email, String password,
                     LocalDate birthDate, String telephone) {
         super(name, firstSurname, secondSurname, email, password, birthDate, telephone);
         this.setRole(Role.EMPLOYEE);
     }
+
+    // Getters y Setter de los atributos de la clase
 
     public Hairdresser getHairdresser() {
         return hairdresser;

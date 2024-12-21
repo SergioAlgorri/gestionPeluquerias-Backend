@@ -14,6 +14,7 @@ public class HairdresserCompany {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     private String name;
 
     @OneToMany(mappedBy = "company")
@@ -21,18 +22,29 @@ public class HairdresserCompany {
 
     @Transient
     private List<ServiceComponent> services = new ArrayList<>();
+
     @Transient
     private List<Reward> rewards = new ArrayList<>();
+
     @Transient
     private List<Client> clients = new ArrayList<>();
 
+    /**
+     * Empty constructor.
+     */
+    public HairdresserCompany() {
+
+    }
+
+    /**
+     * Parameterised constructor.
+     * @param name name of the hairdresser company
+     */
     public HairdresserCompany(String name) {
         this.name = name;
     }
 
-    public HairdresserCompany() {
-
-    }
+    // Getters y Setter de los atributos de la clase
 
     public long getId() {
         return id;

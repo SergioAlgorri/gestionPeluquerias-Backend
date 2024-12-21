@@ -37,6 +37,7 @@ public class HairServiceImpl implements IHairService {
 
     @Override
     public ServiceComponent createService(RequestServiceDTO service) {
+        // Crear el servicio
         ServiceComponent serviceCreated;
 
         // Servicio Simple
@@ -46,12 +47,13 @@ public class HairServiceImpl implements IHairService {
         } else {
             // Servicio Compuesto
             serviceCreated = new CompositeService(service.getName(), service.getDescription());
-            for (Long l: service.getServices()) {
-                ServiceComponent serviceComponent = this.findById(l);
+            for (Long serviceId: service.getServices()) {
+                ServiceComponent serviceComponent = this.findById(serviceId);
                 ((CompositeService) serviceCreated).addService(serviceComponent);
             }
         }
 
+        // Comprobar si está duplicado
         for (ServiceComponent sc: this.findAll()) {
             if (sc.equals(serviceCreated)) {
                 return null;
@@ -69,6 +71,7 @@ public class HairServiceImpl implements IHairService {
             return null;
         }
 
+        // Update Service
         if (service.getName() != null) {
             serviceFound.setName(service.getName());
         }

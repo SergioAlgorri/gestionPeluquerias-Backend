@@ -3,8 +3,10 @@ package gestionPeluqueria.services.impl;
 import gestionPeluqueria.entities.Reward;
 import gestionPeluqueria.repositories.RewardRepository;
 import gestionPeluqueria.services.IRewardService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -80,5 +82,17 @@ public class RewardServiceImpl implements IRewardService {
         }
 
         rewardRepository.delete(reward);
+    }
+
+    // Se ejecuta una vez al día a las 00:00:00
+    @Scheduled(cron = "0 0 0 * * MON-SUN")
+    public void deleteExpiredRewards() {
+        LocalDate currentDate = LocalDate.now();
+        List<Reward> expiredRewards = rewardRepository.findByExpirationDateBefore(currentDate);
+
+        System.out.println(expiredRewards.size() + " expired rewards removed.");
+        if (!expiredRewards.isEmpty()) {
+            rewardRepository.deleteAll(expiredRewards);
+        }
     }
 }

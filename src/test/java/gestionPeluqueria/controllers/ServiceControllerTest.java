@@ -1,6 +1,5 @@
 package gestionPeluqueria.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import gestionPeluqueria.dto.RequestServiceDTO;
 import gestionPeluqueria.entities.composite.CompositeService;
 import gestionPeluqueria.entities.composite.ServiceComponent;
@@ -103,14 +102,14 @@ public class ServiceControllerTest {
         when(mockHairService.createService(any(RequestServiceDTO.class))).thenReturn(service2);
         mockMvc.perform(MockMvcRequestBuilders.post("/peluquerias/servicios")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(requestSimple)))
+                        .content(TestUtils.asJsonString(requestSimple)))
                 .andExpect(status().isCreated());
 
         // Caso No Válido: Se crea un servicio existente (CONFLICT)
         when(mockHairService.createService(requestSimple)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.post("/peluquerias/servicios")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(requestSimple)))
+                        .content(TestUtils.asJsonString(requestSimple)))
                 .andExpect(status().isConflict());
     }
 
@@ -124,14 +123,14 @@ public class ServiceControllerTest {
         when(mockHairService.updateService(6, updatedService)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.put("/peluquerias/servicios/6")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(updatedService)))
+                        .content(TestUtils.asJsonString(updatedService)))
                 .andExpect(status().isBadRequest());
 
         // Caso Válido: Servicio Encontrado (OK)
         when(mockHairService.updateService(service1.getId(), updatedService)).thenReturn(service1);
         mockMvc.perform(MockMvcRequestBuilders.put("/peluquerias/servicios/" +service1.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(asJsonString(updatedService)))
+                        .content(TestUtils.asJsonString(updatedService)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Corte Infantil"));
     }
@@ -149,14 +148,5 @@ public class ServiceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/peluquerias/servicios/" +service3.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNoContent());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException("Error serializando el objeto a JSON: " + e.getMessage(), e);
-        }
     }
 }

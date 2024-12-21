@@ -17,23 +17,33 @@ public class Client extends User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Appointment> appointments = new ArrayList<>();
+
     @OneToMany
     @JoinTable(name="appointments_history",
             joinColumns=@JoinColumn(name="client_id"),
             inverseJoinColumns=@JoinColumn(name="appointment_id"))
     private List<Appointment> history = new ArrayList<>();
 
+    /**
+     * Empty constrcutor.
+     */
     public Client() {
-        // this.points = 0;
+        this.points = 0;
         this.setRole(Role.CLIENT);
     }
 
+    /**
+     * Parameterised constructor.
+     * Same constructor of the parent class by adding the CLIENT role and the points to it.
+     */
     public Client(String name, String firstSurname, String secondSurname, String email, String password,
                   LocalDate birthDate, String telephone) {
         super(name, firstSurname, secondSurname, email, password, birthDate, telephone);
-        // this.points = 0;
+        this.points = 0;
         this.setRole(Role.CLIENT);
     }
+
+    // Getters y Setter de los atributos de la clase
 
     public int getPoints() {
         return this.points;
@@ -42,12 +52,6 @@ public class Client extends User {
     public void setPoints(int points) {
         this.points = points;
     }
-
-    public void addPoints(int points) {
-        this.points += points;
-    }
-
-    public void subtractPoint(int points) { this.points -= points; }
 
     public List<Appointment> getHistory() {
         return history;
@@ -65,4 +69,18 @@ public class Client extends User {
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
     }
+
+    /**
+     * Method that adds up points for the client.
+     * @param points points to be added.
+     */
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
+    /**
+     * Method for subtracting points from the client.
+     * @param points points to be subtracted.
+     */
+    public void subtractPoint(int points) { this.points -= points; }
 }

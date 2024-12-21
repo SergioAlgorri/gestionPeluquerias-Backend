@@ -1,6 +1,5 @@
 package gestionPeluqueria.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import gestionPeluqueria.dto.RequestUserDTO;
 import gestionPeluqueria.entities.Hairdresser;
 import gestionPeluqueria.entities.Inheritance.Client;
@@ -25,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDate;
 import java.util.List;
 
+import static gestionPeluqueria.controllers.TestUtils.asJsonString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -197,14 +197,5 @@ public class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/usuarios/" +employee1.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNoContent());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException("Error serializando el objeto a JSON: " + e.getMessage(), e);
-        }
     }
 }

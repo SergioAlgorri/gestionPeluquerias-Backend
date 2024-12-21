@@ -29,4 +29,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             + "AND a.startTime BETWEEN :startTime AND :endTime")
     int countByEmployeeAndDate(@Param("idEmployee") long idEmployee, @Param("startTime") LocalDateTime startTime,
                                @Param("endTime") LocalDateTime endTime);
+
+    List<Appointment> findByStartTimeBeforeAndAttendedFalse(LocalDateTime endTime);
+
+    @Query("SELECT a FROM Appointment a WHERE a.startTime BETWEEN :start and :end")
+    List<Appointment> findAppointmentsBetweenHours(LocalDateTime start, LocalDateTime end);
 }
