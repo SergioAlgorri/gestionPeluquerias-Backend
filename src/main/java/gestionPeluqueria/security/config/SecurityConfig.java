@@ -36,7 +36,7 @@ public class SecurityConfig {
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize ->
                     authorize
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/recuperar_contraseña/**", "/auth/**").permitAll()
                         // HairdresserController
                         .requestMatchers(HttpMethod.POST, "/peluquerias").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/peluquerias/{id}").hasAuthority("ADMIN")
