@@ -6,7 +6,7 @@ import gestionPeluqueria.entities.ForgotPassword;
 import gestionPeluqueria.entities.Inheritance.User;
 import gestionPeluqueria.repositories.ForgotPasswordRepository;
 import gestionPeluqueria.repositories.UserRepository;
-import gestionPeluqueria.services.impl.EmailService;
+import gestionPeluqueria.services.impl.EmailServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +22,11 @@ import java.util.Random;
 public class ForgotPasswordController {
 
     private final UserRepository userRepository;
-    private final EmailService emailService;
+    private final EmailServiceImpl emailService;
     private final ForgotPasswordRepository forgotPasswordRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ForgotPasswordController(UserRepository userRepository, EmailService emailService,
+    public ForgotPasswordController(UserRepository userRepository, EmailServiceImpl emailService,
                                     ForgotPasswordRepository forgotPasswordRepository,
                                     PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -40,11 +40,11 @@ public class ForgotPasswordController {
     public ResponseEntity<String> verifyEmail(@PathVariable String email) {
         User user = userRepository.findByEmail(email);
 
-        Integer opt = optGenerator();
+        Integer otp = optGenerator();
         MailBodyDTO mailBody = new MailBodyDTO(email, "Recuperar Contraseña",
-                "El código de verificación es: " + opt);
+                "El código de verificación es: " + otp);
 
-        ForgotPassword fp = new ForgotPassword(opt, new Date(System.currentTimeMillis() + 90 * 1000), user);
+        ForgotPassword fp = new ForgotPassword(otp, new Date(System.currentTimeMillis() + 90 * 1000), user);
 
         emailService.sendSimpleMessage(mailBody);
         forgotPasswordRepository.save(fp);
@@ -59,11 +59,16 @@ public class ForgotPasswordController {
 
         ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user);
 
+        if (fp == null) {
+            return new ResponseEntity<>("Código Erróneo", HttpStatus.EXPECTATION_FAILED);
+        }
+
         if (fp.getExpirationTime().before(Date.from(Instant.now()))) {
            forgotPasswordRepository.delete(fp);
            return new ResponseEntity<>("Código Expirado", HttpStatus.EXPECTATION_FAILED);
         }
 
+        forgotPasswordRepository.delete(fp);
         return ResponseEntity.ok("Código Verificado");
     }
 

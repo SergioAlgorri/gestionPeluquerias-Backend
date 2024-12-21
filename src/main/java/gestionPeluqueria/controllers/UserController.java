@@ -4,13 +4,16 @@ import gestionPeluqueria.dto.RequestUserDTO;
 import gestionPeluqueria.dto.UserEmployeeDTOAssembler;
 import gestionPeluqueria.entities.Inheritance.User;
 import gestionPeluqueria.entities.Role;
+import gestionPeluqueria.security.CustomUserDetails;
 import gestionPeluqueria.services.impl.UserServiceImpl;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -45,11 +48,19 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> findById(@PathVariable("id") long idUser) {
+    public ResponseEntity<Object> findById(@PathVariable("id") long idUser, Authentication authentication) {
         try {
             User user = userService.findById(idUser);
             if (user == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String currentEmail = userDetails.getUsername();
+            User currentUser = userService.findAll(null, currentEmail, null,
+                    PageRequest.of(0,10)).getContent().get(0);
+            if (currentUser.getRole().equals(Role.CLIENT) && (user.getId() != currentUser.getId())) {
+                return new ResponseEntity<>("No tienes permisos", HttpStatus.FORBIDDEN);
             }
 
             return new ResponseEntity<>(UserEmployeeDTOAssembler.generateDTO(user), HttpStatus.OK);

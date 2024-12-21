@@ -128,13 +128,10 @@ public class AppointmentServiceImpl implements IAppointmentService {
         }
 
         // Check Availability
-        if (request.getStartTime().toLocalTime().isBefore(hairdresser.getOpeningTime()) ||
-                request.getStartTime().toLocalTime().isAfter(hairdresser.getClosingTime())) {
-            return null;
-        }
-
         LocalDateTime endTime = request.getStartTime().plusMinutes(service.getTotalDuration());
-        if (!checkAvailability(hairdresser, request.getStartTime(), endTime)) {
+        if (/*request.getStartTime().toLocalTime().isBefore(hairdresser.getOpeningTime()) ||
+                endTime.toLocalTime().isAfter(hairdresser.getClosingTime()) ||*/
+                !checkAvailability(hairdresser, request.getStartTime(), endTime)) {
             return null;
         }
 

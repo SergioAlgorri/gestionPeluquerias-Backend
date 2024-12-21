@@ -54,7 +54,9 @@ public class SecurityConfig {
                             .hasAuthority("ADMIN")
                         // UserController
                         .requestMatchers(HttpMethod.GET, "/usuarios")
-                        .hasAnyAuthority("ADMIN", "EMPLOYEE")
+                            .hasAnyAuthority("ADMIN", "EMPLOYEE")
+                        .requestMatchers(HttpMethod.GET, "/usuarios/{idUsuario}")
+                            .hasAnyAuthority("CLIENT", "ADMIN", "EMPLOYEE")
                         .requestMatchers(HttpMethod.POST, "/usuarios")
                             .hasAnyAuthority("ADMIN", "EMPLOYEE")
                         // AppointmentController
