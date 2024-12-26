@@ -10,10 +10,10 @@ import gestionPeluqueria.services.impl.UserServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +34,7 @@ public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @Mock
     private UserServiceImpl mockUserService;
 
     private User client1;
