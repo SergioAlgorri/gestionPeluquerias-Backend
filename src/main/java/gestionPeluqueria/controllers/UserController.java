@@ -1,6 +1,7 @@
 package gestionPeluqueria.controllers;
 
 import gestionPeluqueria.dto.RequestUserDTO;
+import gestionPeluqueria.dto.UserEmployeeDTO;
 import gestionPeluqueria.dto.UserEmployeeDTOAssembler;
 import gestionPeluqueria.entities.Inheritance.User;
 import gestionPeluqueria.entities.Role;
@@ -83,7 +84,7 @@ public class UserController {
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUser(@PathVariable("id") long idUser, @RequestBody User user) {
+    public ResponseEntity<UserEmployeeDTO> updateUser(@PathVariable("id") long idUser, @RequestBody User user) {
         try {
             User userUpdated = userService.updateUser(idUser, user);
 
@@ -91,7 +92,7 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
-            return new ResponseEntity<>(userUpdated, HttpStatus.OK);
+            return new ResponseEntity<>(UserEmployeeDTOAssembler.generateDTO(userUpdated), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

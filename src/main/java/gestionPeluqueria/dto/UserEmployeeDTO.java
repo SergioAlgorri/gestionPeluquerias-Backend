@@ -1,8 +1,12 @@
 package gestionPeluqueria.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import gestionPeluqueria.entities.Hairdresser;
 import gestionPeluqueria.entities.Role;
+import gestionPeluqueria.serialization.LocalDateDeserializer;
+import gestionPeluqueria.serialization.LocalDateSerializer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,6 +20,8 @@ public class UserEmployeeDTO {
     private String fullName;
     private String email;
     private String password;
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birthDate;
     private String telephone;
     private Integer points;

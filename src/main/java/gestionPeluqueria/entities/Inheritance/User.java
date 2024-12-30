@@ -1,6 +1,10 @@
 package gestionPeluqueria.entities.Inheritance;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import gestionPeluqueria.entities.Role;
+import gestionPeluqueria.serialization.LocalDateDeserializer;
+import gestionPeluqueria.serialization.LocalDateSerializer;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -33,6 +37,8 @@ public class User implements Serializable {
     private String password;
 
     @Column(name = "birth_date")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birthDate;
 
     @Column
