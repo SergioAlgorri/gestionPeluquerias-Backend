@@ -11,6 +11,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserEmployeeDTO {
 
+    private long id;
     private Role role;
     private String fullName;
     private String email;
@@ -23,6 +24,14 @@ public class UserEmployeeDTO {
     private HairdresserDTO hairdresser;
 
     public UserEmployeeDTO() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getFullName() {

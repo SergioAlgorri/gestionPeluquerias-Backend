@@ -4,12 +4,13 @@ import gestionPeluqueria.entities.Inheritance.Client;
 import gestionPeluqueria.entities.composite.ServiceComponent;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "hairdresser_company")
-public class HairdresserCompany {
+public class HairdresserCompany implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

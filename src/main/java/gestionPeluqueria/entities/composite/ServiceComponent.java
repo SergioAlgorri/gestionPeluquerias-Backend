@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +20,7 @@ import java.util.Objects;
         @JsonSubTypes.Type(value = SimpleService.class, name = "simple"),
         @JsonSubTypes.Type(value = CompositeService.class, name = "composite")
 })
-public abstract  class ServiceComponent {
+public abstract  class ServiceComponent implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

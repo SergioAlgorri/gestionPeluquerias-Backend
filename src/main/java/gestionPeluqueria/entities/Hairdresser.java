@@ -3,6 +3,7 @@ package gestionPeluqueria.entities;
 import gestionPeluqueria.entities.Inheritance.Employee;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "hairdressers")
-public class Hairdresser {
+public class Hairdresser implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

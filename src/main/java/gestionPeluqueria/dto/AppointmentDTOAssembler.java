@@ -15,8 +15,10 @@ public class AppointmentDTOAssembler {
         String employeeName = appointment.getEmployee().concatFullName();
         AppointmentDTO result = new AppointmentDTO(
                 appointment.getStartTime(), appointment.getEndTime(), appointment.getComment(), userName,
-                appointment.getService().getName(), employeeName, appointment.getPrice()
+                appointment.getService().getName(), employeeName, appointment.getHairdresser().getAddress(),
+                appointment.getPrice()
         );
+        result.setId(appointment.getId());
 
         if (appointment.getReward() != null) {
             result.setRewardName(appointment.getReward().getName());

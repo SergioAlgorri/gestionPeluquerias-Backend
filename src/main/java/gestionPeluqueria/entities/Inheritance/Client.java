@@ -4,13 +4,14 @@ import gestionPeluqueria.entities.Appointment;
 import gestionPeluqueria.entities.Role;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("CLIENT")
-public class Client extends User {
+public class Client extends User implements Serializable {
 
     @Transient
     private int points;

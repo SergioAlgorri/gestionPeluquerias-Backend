@@ -12,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static gestionPeluqueria.security.config.ApplicationConfig.corsFilter;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -30,6 +32,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
+            .cors(c -> c.configurationSource(corsFilter()))
             .exceptionHandling(exceptionHandling ->
                 exceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
             .sessionManagement(sessionManagement ->
@@ -54,7 +57,7 @@ public class SecurityConfig {
                             .hasAuthority("ADMIN")
                         // UserController
                         .requestMatchers(HttpMethod.GET, "/usuarios")
-                            .hasAnyAuthority("ADMIN", "EMPLOYEE")
+                            .hasAnyAuthority("ADMIN", "EMPLOYEE", "CLIENT")
                         .requestMatchers(HttpMethod.GET, "/usuarios/{idUsuario}")
                             .hasAnyAuthority("CLIENT", "ADMIN", "EMPLOYEE")
                         .requestMatchers(HttpMethod.POST, "/usuarios")

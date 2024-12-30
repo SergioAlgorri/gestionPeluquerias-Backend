@@ -115,7 +115,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", Matchers.hasSize(2)))
-                .andExpect(jsonPath("$.content[0].role").value("CLIENT"));
+                .andExpect(jsonPath("$.content[0].role").value(Role.CLIENT));
     }
 
     @Test

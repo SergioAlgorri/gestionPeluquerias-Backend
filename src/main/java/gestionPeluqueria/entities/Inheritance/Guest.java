@@ -7,9 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
+import java.io.Serializable;
+
 @Entity
 @DiscriminatorValue("GUEST")
-public class Guest extends User {
+public class Guest extends User implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "appointment_id")

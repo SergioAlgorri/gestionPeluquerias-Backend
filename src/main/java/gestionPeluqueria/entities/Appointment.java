@@ -5,6 +5,7 @@ import gestionPeluqueria.entities.Inheritance.User;
 import gestionPeluqueria.entities.composite.ServiceComponent;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "appointments")
-public class Appointment {
+public class Appointment implements Serializable {
 
     // Factor multiplicador de puntos por cada reserva (10%)
     private static final double POINTS_MULTIPLIER = 0.1;

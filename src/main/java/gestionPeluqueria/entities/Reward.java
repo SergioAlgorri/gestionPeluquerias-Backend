@@ -2,13 +2,14 @@ package gestionPeluqueria.entities;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Table(name = "rewards")
-public class Reward {
+public class Reward implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

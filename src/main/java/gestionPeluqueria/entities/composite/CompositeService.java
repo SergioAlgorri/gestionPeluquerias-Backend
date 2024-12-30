@@ -2,12 +2,13 @@ package gestionPeluqueria.entities.composite;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "composite_service")
-public class CompositeService extends ServiceComponent {
+public class CompositeService extends ServiceComponent implements Serializable {
 
     @OneToMany
     @JoinTable(name = "composite_service_services",

@@ -5,13 +5,14 @@ import gestionPeluqueria.entities.Hairdresser;
 import gestionPeluqueria.entities.Role;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("EMPLOYEE")
-public class Employee extends User {
+public class Employee extends User implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "hairdresser_id")

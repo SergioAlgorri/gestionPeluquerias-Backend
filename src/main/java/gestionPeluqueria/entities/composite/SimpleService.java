@@ -2,12 +2,13 @@ package gestionPeluqueria.entities.composite;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "simple_service")
-public class SimpleService extends ServiceComponent {
+public class SimpleService extends ServiceComponent implements Serializable {
 
     private BigDecimal price;
 

@@ -3,11 +3,12 @@ package gestionPeluqueria.entities;
 import gestionPeluqueria.entities.Inheritance.User;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "forgot_password")
-public class ForgotPassword {
+public class ForgotPassword implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

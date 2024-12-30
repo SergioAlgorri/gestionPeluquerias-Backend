@@ -11,7 +11,8 @@ import gestionPeluqueria.entities.Reward;
 import gestionPeluqueria.entities.Role;
 import gestionPeluqueria.entities.composite.ServiceComponent;
 import gestionPeluqueria.repositories.*;
-import gestionPeluqueria.services.IAppointmentService;
+import gestionPeluqueria.services.IAppointmentHairdresserService;
+import gestionPeluqueria.services.IAppointmentUserService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class AppointmentServiceImpl implements IAppointmentService {
+public class AppointmentServiceImpl implements IAppointmentHairdresserService, IAppointmentUserService {
 
     private final AppointmentRepository appointmentRepository;
     private final HairdresserRepository hairdresserRepository;
@@ -38,6 +39,8 @@ public class AppointmentServiceImpl implements IAppointmentService {
         this.serviceRepository = serviceRepository;
         this.rewardRepository = rewardRepository;
     }
+
+    // Interfaz IAppointmentHairdresserService
 
     @Override
     public List<Appointment> findAll(long idHairdresser, Long idEmployee, LocalDate date) {
@@ -71,36 +74,6 @@ public class AppointmentServiceImpl implements IAppointmentService {
     }
 
     @Override
-    public List<Appointment> findAllAppointmentsUser(long idUser) {
-        User user = userRepository.findById(idUser);
-
-        if (user == null) {
-            return null;
-        }
-
-        return appointmentRepository.findByUser(user.getId());
-    }
-
-    @Override
-    public Appointment findById(long idUser, long idAppointment) {
-        User user = userRepository.findById(idUser);
-        if (user == null) {
-            return null;
-        }
-
-        Appointment appointment = appointmentRepository.findById(idAppointment);
-        if (appointment == null) {
-            return null;
-        }
-
-        if (!((Client) user).getAppointments().contains(appointment)) {
-            return null;
-        }
-
-        return appointment;
-    }
-
-    @Override
     public Appointment createAppointment(long idHairdresser, RequestAppointmentDTO request) {
         // Validar IDs
         Hairdresser hairdresser = hairdresserRepository.findById(idHairdresser);
@@ -129,8 +102,8 @@ public class AppointmentServiceImpl implements IAppointmentService {
 
         // Check Availability
         LocalDateTime endTime = request.getStartTime().plusMinutes(service.getTotalDuration());
-        if (/*request.getStartTime().toLocalTime().isBefore(hairdresser.getOpeningTime()) ||
-                endTime.toLocalTime().isAfter(hairdresser.getClosingTime()) ||*/
+        if (request.getStartTime().toLocalTime().isBefore(hairdresser.getOpeningTime()) ||
+                endTime.toLocalTime().isAfter(hairdresser.getClosingTime()) ||
                 !checkAvailability(hairdresser, request.getStartTime(), endTime)) {
             return null;
         }
@@ -176,6 +149,100 @@ public class AppointmentServiceImpl implements IAppointmentService {
         appointmentRepository.save(appointment);
         hairdresser.addAppointments(appointment);
         hairdresserRepository.save(hairdresser);
+        return appointment;
+    }
+
+    @Override
+    @Transactional
+    public void closeAppointment(long idHairdresser, long idAppointment, boolean hasReward) {
+        // Validate IDs
+        Hairdresser hairdresser = hairdresserRepository.findById(idHairdresser);
+        Appointment appointment = appointmentRepository.findById(idAppointment);
+
+        if (hairdresser == null || appointment == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (!hairdresser.getAppointments().contains(appointment)) {
+            throw new IllegalArgumentException();
+        }
+
+        User user = appointment.getUser();
+        Employee employee = appointment.getEmployee();
+
+        // El usuario de la cita es un CLIENT
+        if (user instanceof Client) {
+            // La cita ya ha sido cerrada (está en el histórico del usuario)
+            if (((Client) user).getHistory().contains(appointment)) {
+                throw new IllegalArgumentException();
+            }
+
+            // Gestión de los puntos y la recompensa
+            if (appointment.getReward() != null && hasReward) {
+                int userPoints = ((Client) user).getPoints();
+                int rewardPoints = appointment.getReward().getPoints();
+
+                if (userPoints >= rewardPoints) {
+                    ((Client) user).subtractPoint(rewardPoints);
+                } else {
+                    // En teoria el flujo no tendría que pasar por esta excepción ya que el cliente solo
+                    // puede elegir recompensas disponibles respecto a sus puntos actuales
+                    throw new RuntimeException();
+                }
+            } else {
+                // Se cancela la recompensa si estuviera marcada (actualizandose el precio y los puntos automaticamente)
+                appointment.setReward(null);
+                ((Client) user).addPoints(appointment.getPoints());
+            }
+
+            // Eliminar de las citas activas del cliente, del empleado y de la peluqueria
+            // Al eliminar de las citas activas del cliente automaticamente pasa a su historico
+            ((Client) user).addHistory(appointment);
+            appointment.setUser(null);
+            appointment.setHairdresser(null);
+            appointment.setAttended(true);
+            employee.getActiveAppointments().remove(appointment);
+            hairdresser.getAppointments().remove(appointment);
+
+            userRepository.save(user);
+            userRepository.save(employee);
+            hairdresserRepository.save(hairdresser);
+        } else {
+            // El usuario de la cita es un GUEST
+            appointmentRepository.delete(appointment);
+            userRepository.delete(user);
+        }
+    }
+
+    // Interfaz IAppointmentUserService
+
+    @Override
+    public List<Appointment> findAllAppointmentsUser(long idUser) {
+        User user = userRepository.findById(idUser);
+
+        if (user == null) {
+            return null;
+        }
+
+        return appointmentRepository.findByUser(user.getId());
+    }
+
+    @Override
+    public Appointment findById(long idUser, long idAppointment) {
+        User user = userRepository.findById(idUser);
+        if (user == null) {
+            return null;
+        }
+
+        Appointment appointment = appointmentRepository.findById(idAppointment);
+        if (appointment == null) {
+            return null;
+        }
+
+        if (!((Client) user).getAppointments().contains(appointment)) {
+            return null;
+        }
+
         return appointment;
     }
 
@@ -240,67 +307,7 @@ public class AppointmentServiceImpl implements IAppointmentService {
         }
     }
 
-    @Override
-    @Transactional
-    public void closeAppointment(long idHairdresser, long idAppointment, boolean hasReward) {
-        // Validate IDs
-        Hairdresser hairdresser = hairdresserRepository.findById(idHairdresser);
-        Appointment appointment = appointmentRepository.findById(idAppointment);
-
-        if (hairdresser == null || appointment == null) {
-            throw new IllegalArgumentException();
-        }
-
-        if (!hairdresser.getAppointments().contains(appointment)) {
-            throw new IllegalArgumentException();
-        }
-
-        User user = appointment.getUser();
-        Employee employee = appointment.getEmployee();
-
-        // El usuario de la cita es un CLIENT
-        if (user instanceof Client) {
-            // La cita ya ha sido cerrada (está en el histórico del usuario)
-            if (((Client) user).getHistory().contains(appointment)) {
-                throw new IllegalArgumentException();
-            }
-
-            // Gestión de los puntos y la recompensa
-            if (appointment.getReward() != null && hasReward) {
-                int userPoints = ((Client) user).getPoints();
-                int rewardPoints = appointment.getReward().getPoints();
-
-                if (userPoints >= rewardPoints) {
-                    ((Client) user).subtractPoint(rewardPoints);
-                } else {
-                    // En teoria el flujo no tendría que pasar por esta excepción ya que el cliente solo
-                    // puede elegir recompensas disponibles respecto a sus puntos actuales
-                    throw new RuntimeException();
-                }
-            } else {
-                // Se cancela la recompensa si estuviera marcada (actualizandose el precio y los puntos automaticamente)
-                appointment.setReward(null);
-                ((Client) user).addPoints(appointment.getPoints());
-            }
-
-            // Eliminar de las citas activas del cliente, del empleado y de la peluqueria
-            // Al eliminar de las citas activas del cliente automaticamente pasa a su historico
-            ((Client) user).addHistory(appointment);
-            appointment.setUser(null);
-            appointment.setHairdresser(null);
-            appointment.setAttended(true);
-            employee.getActiveAppointments().remove(appointment);
-            hairdresser.getAppointments().remove(appointment);
-
-            userRepository.save(user);
-            userRepository.save(employee);
-            hairdresserRepository.save(hairdresser);
-        } else {
-            // El usuario de la cita es un GUEST
-            appointmentRepository.delete(appointment);
-            userRepository.delete(user);
-        }
-    }
+    // Métodos Auxiliares
 
     // Public para el test
     public boolean checkAvailability(Hairdresser hairdresser, LocalDateTime startTime, LocalDateTime endTime) {

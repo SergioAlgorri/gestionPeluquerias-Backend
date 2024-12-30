@@ -4,11 +4,12 @@ import gestionPeluqueria.entities.Role;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @DiscriminatorValue("ADMIN")
-public class Admin extends User {
+public class Admin extends User implements Serializable {
 
     /**
      * Empty constructor.

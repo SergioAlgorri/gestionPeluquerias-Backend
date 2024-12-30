@@ -9,6 +9,7 @@ import java.time.LocalTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppointmentDTO {
 
+    private long id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String comment;
@@ -16,17 +17,27 @@ public class AppointmentDTO {
     private String serviceName;
     private String rewardName;
     private String employeeName;
+    private String hairdresserAddress;
     private BigDecimal price;
 
-    public AppointmentDTO(LocalDateTime startTime, LocalDateTime endTime, String comment,
-                          String username, String serviceName, String employeeName, BigDecimal price) {
+    public AppointmentDTO(LocalDateTime startTime, LocalDateTime endTime, String comment, String username,
+                          String serviceName, String employeeName, String hairdresserAddress, BigDecimal price) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.comment = comment;
         this.userName = username;
         this.serviceName = serviceName;
         this.employeeName = employeeName;
+        this.hairdresserAddress = hairdresserAddress;
         this.price = price;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public LocalDateTime getStartTime() {
@@ -83,6 +94,14 @@ public class AppointmentDTO {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
+    }
+
+    public String getHairdresserAddress() {
+        return hairdresserAddress;
+    }
+
+    public void setHairdresserAddress(String hairdresserAddress) {
+        this.hairdresserAddress = hairdresserAddress;
     }
 
     public BigDecimal getPrice() {

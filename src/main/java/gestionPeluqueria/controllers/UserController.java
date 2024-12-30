@@ -6,7 +6,6 @@ import gestionPeluqueria.entities.Inheritance.User;
 import gestionPeluqueria.entities.Role;
 import gestionPeluqueria.security.CustomUserDetails;
 import gestionPeluqueria.services.impl.UserServiceImpl;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/usuarios")

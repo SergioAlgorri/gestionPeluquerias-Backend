@@ -24,10 +24,11 @@ public class HairdresserDTOAssembler {
             String userName = concatFullName(a.getUser());
             String serviceName = a.getService().getName();
             String employeeName = concatFullName(a.getEmployee());
+            String hairdresserAddress = a.getHairdresser().getAddress();
             BigDecimal price = a.getPrice();
 
             AppointmentDTO appointmentDTO = new AppointmentDTO(startTime, endTime, comment, userName, serviceName,
-                    employeeName, price);
+                    employeeName, hairdresserAddress, price);
             if (a.getReward() != null) {
                 appointmentDTO.setRewardName(a.getReward().getName());
             }

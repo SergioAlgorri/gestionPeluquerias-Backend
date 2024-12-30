@@ -11,6 +11,7 @@ public class UserEmployeeDTOAssembler {
     public static UserEmployeeDTO generateDTO(User user) {
         UserEmployeeDTO result = new UserEmployeeDTO();
 
+        result.setId(user.getId());
         result.setFullName(user.concatFullName());
         result.setEmail(user.getEmail());
         result.setPassword(user.getPassword());
@@ -29,7 +30,9 @@ public class UserEmployeeDTOAssembler {
                 if (a.getUser() != null) {
                     employeeName = a.getEmployee().concatFullName();
                     AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), a.getComment(),
-                            userName, a.getService().getName(), employeeName, a.getPrice());
+                            userName, a.getService().getName(), employeeName, a.getHairdresser().getAddress(),
+                            a.getPrice());
+                    appointmentDTO.setId(a.getId());
                     if (a.getReward() != null) {
                         appointmentDTO.setRewardName(a.getReward().getName());
                     }
@@ -41,7 +44,7 @@ public class UserEmployeeDTOAssembler {
             for (Appointment a: ((Client) user).getHistory()) {
                 employeeName = a.getEmployee().concatFullName();
                 AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), a.getComment(),
-                        userName, a.getService().getName(), employeeName, a.getPrice());
+                        userName, a.getService().getName(), employeeName, a.getHairdresser().getAddress(), a.getPrice());
                 if (a.getReward() != null) {
                     appointmentDTO.setRewardName(a.getReward().getName());
                 }
@@ -60,7 +63,8 @@ public class UserEmployeeDTOAssembler {
                 if (a.getUser() != null) {
                     userName = a.getUser().concatFullName();
                     AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), a.getComment(),
-                            userName, a.getService().getName(), employeeName, a.getPrice());
+                            userName, a.getService().getName(), employeeName, a.getHairdresser().getAddress(),
+                            a.getPrice());
                     if (a.getReward() != null) {
                         appointmentDTO.setRewardName(a.getReward().getName());
                     }
