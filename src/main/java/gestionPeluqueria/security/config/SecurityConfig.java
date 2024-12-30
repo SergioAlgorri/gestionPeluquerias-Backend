@@ -61,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/usuarios/{idUsuario}")
                             .hasAnyAuthority("CLIENT", "ADMIN", "EMPLOYEE")
                         .requestMatchers(HttpMethod.POST, "/usuarios")
-                            .hasAnyAuthority("ADMIN", "EMPLOYEE")
+                            .hasAnyAuthority("ADMIN", "EMPLOYEE", "CLIENT")
                         // AppointmentController
                         .requestMatchers(HttpMethod.GET, "/peluquerias/{idPeluqueria}/citas")
                             .hasAnyAuthority("ADMIN", "EMPLOYEE")
