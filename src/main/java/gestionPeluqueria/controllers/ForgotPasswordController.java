@@ -39,6 +39,9 @@ public class ForgotPasswordController {
     @PostMapping(value = "/{email}")
     public ResponseEntity<String> verifyEmail(@PathVariable String email) {
         User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return new ResponseEntity<>("Correo No Válido", HttpStatus.BAD_REQUEST);
+        }
 
         Integer otp = optGenerator();
         MailBodyDTO mailBody = new MailBodyDTO(email, "Recuperar Contraseña",
