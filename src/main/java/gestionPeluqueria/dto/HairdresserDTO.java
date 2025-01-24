@@ -9,7 +9,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HairdresserDTO {
 
-    // private long id;
+    private long id;
     private String companyName;
     private LocalTime openingTime;
     private LocalTime closingTime;
@@ -21,7 +21,7 @@ public class HairdresserDTO {
     public HairdresserDTO() {
 
     }
-    /*
+
     public long getId() {
         return id;
     }
@@ -29,7 +29,7 @@ public class HairdresserDTO {
     public void setId(long id) {
         this.id = id;
     }
-     */
+
     public LocalTime getOpeningTime() {
         return openingTime;
     }
