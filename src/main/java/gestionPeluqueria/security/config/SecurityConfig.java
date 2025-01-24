@@ -68,7 +68,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/peluquerias/{idPeluqueria}/citas/{idCita}")
                             .hasAnyAuthority("ADMIN", "EMPLOYEE")
                         .requestMatchers(HttpMethod.GET, "/usuarios/{idUsuario}/historico_citas")
-                            .hasAuthority("CLIENT")
+                            .hasAnyAuthority("CLIENT", "ADMIN", "EMPLOYEE")
                         .requestMatchers(HttpMethod.PUT, "usuarios/{idUsuario}/citas/{idCita}")
                             .hasAnyAuthority("ADMIN", "EMPLOYEE")
                         // El resto de endpoints cualquier ROL puede ejecutarlo
