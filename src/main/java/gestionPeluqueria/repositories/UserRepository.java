@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
         + "LOWER(u.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
         + "OR LOWER(u.firstSurname) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
         + "OR LOWER(u.secondSurname) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
-    Page<User> findByName(@Param("searchTerm") String searchTerm, Pageable pageable);
+    Page<User> findByPartialName(@Param("searchTerm") String searchTerm, Pageable pageable);
     User findByEmail(String email);
     Page<User> findByRole(Role role, Pageable pageable);
     @Transactional

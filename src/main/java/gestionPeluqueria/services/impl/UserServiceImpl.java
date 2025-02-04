@@ -35,7 +35,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Page<User> findAll(String name, String email, Role role, Pageable pageable) {
         if (name != null && !name.isEmpty()) {
-            return userRepository.findByName(name, pageable);
+            return userRepository.findByPartialName(name, pageable);
         }
 
         if (email != null && !email.isEmpty()) {

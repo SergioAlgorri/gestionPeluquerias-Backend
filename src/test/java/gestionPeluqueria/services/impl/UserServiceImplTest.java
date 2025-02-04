@@ -97,10 +97,10 @@ public class UserServiceImplTest {
 
         // Filtrar por Nombre (findByName)
         Page<User> listByName = new PageImpl<>(List.of(client1, client3));
-        when(mockUserRepository.findByName(eq("Sergio"), any(Pageable.class))).thenReturn(listByName);
+        when(mockUserRepository.findByPartialName(eq("Sergio"), any(Pageable.class))).thenReturn(listByName);
         Page<User> resultByName = userService.findAll("Sergio", null, null,
                 PageRequest.of(0,10));
-        verify(mockUserRepository).findByName(eq("Sergio"), any(Pageable.class));
+        verify(mockUserRepository).findByPartialName(eq("Sergio"), any(Pageable.class));
         assertFalse(resultByName.isEmpty(), "The list of users should NOT be empty");
         assertEquals(listByName.getContent().size(), resultByName.getContent().size(),
                 "The number of users should be equal to the expected value");
