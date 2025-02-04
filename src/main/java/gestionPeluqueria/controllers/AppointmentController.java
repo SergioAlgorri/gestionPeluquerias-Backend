@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -163,6 +164,21 @@ public class AppointmentController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value= "/disponibilidad")
+    public ResponseEntity<List<LocalTime>> getAvailability(@RequestParam long idHairdresser,
+                                                           @RequestParam LocalDate date,
+                                                           @RequestParam long idService,
+                                                           @RequestParam(required = false) Long idEmployee) {
+        try {
+            List<LocalTime> availableHours =
+                    appointmentService.getAvailability(idHairdresser, idService, date, idEmployee);
+
+            return new ResponseEntity<>(availableHours, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -305,6 +308,62 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
         } else {
             return null;
         }
+    }
+
+    public List<LocalTime> getAvailability(long idHairdresser, long idService, LocalDate date, Long idEmployee) {
+        // Hairdresser
+        Hairdresser hairdresser = hairdresserRepository.findById(idHairdresser);
+
+        // Service
+        ServiceComponent service = serviceRepository.findById(idService);
+
+        if (hairdresser == null || service == null) {
+            return null;
+        }
+
+        // Employee
+        User employee = null;
+        if (idEmployee != null) {
+            employee = userRepository.findById(idEmployee.longValue());
+        }
+
+        int totalDurationService = service.getTotalDuration();
+        LocalTime openingTime = hairdresser.getOpeningTime();
+        LocalTime closingTime = hairdresser.getClosingTime();
+
+        LocalTime startHour = openingTime;
+        if (date.equals(LocalDate.now())) {
+            LocalTime currentHour = LocalTime.now();
+            if (currentHour.isAfter(openingTime)) {
+                startHour = currentHour.plusMinutes(15 - (currentHour.getMinute() % 15));
+            }
+        }
+
+        LocalDateTime startDay = date.atTime(startHour);
+        LocalDateTime endDay = date.atTime(closingTime);
+
+        List<LocalTime> availableHours = new ArrayList<>();
+        LocalDateTime iterHour = startDay;
+        while (iterHour.plusMinutes(totalDurationService).isBefore(endDay) ||
+                iterHour.plusMinutes(totalDurationService).equals(endDay)) {
+            LocalDateTime endTimeService = iterHour.plusMinutes(totalDurationService);
+
+            boolean hairdresserAvailable = checkAvailability(hairdresser, iterHour, endTimeService);
+
+            boolean employeeAvailable = true;
+            if (employee != null) {
+                employeeAvailable = checkEmployeeAvailability(idHairdresser, (Employee) employee,
+                        iterHour, endTimeService);
+            }
+
+            if (hairdresserAvailable && employeeAvailable) {
+                availableHours.add(iterHour.toLocalTime());
+            }
+
+            iterHour = iterHour.plusMinutes(15);
+        }
+
+        return availableHours;
     }
 
     // Métodos Auxiliares

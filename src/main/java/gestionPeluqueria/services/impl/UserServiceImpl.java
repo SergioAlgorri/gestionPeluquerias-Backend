@@ -108,6 +108,10 @@ public class UserServiceImpl implements IUserService {
             userFound.setTelephone(user.getTelephone());
         }
 
+        if (user.getBirthDate() != null) {
+            userFound.setBirthDate(user.getBirthDate());
+        }
+
         return userRepository.save(userFound);
     }
 
