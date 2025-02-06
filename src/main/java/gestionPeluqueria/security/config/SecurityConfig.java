@@ -60,8 +60,9 @@ public class SecurityConfig {
                             .hasAnyAuthority("ADMIN", "EMPLOYEE", "CLIENT")
                         .requestMatchers(HttpMethod.GET, "/usuarios/{idUsuario}")
                             .hasAnyAuthority("CLIENT", "ADMIN", "EMPLOYEE")
-                        .requestMatchers(HttpMethod.POST, "/usuarios")
-                            .hasAnyAuthority("ADMIN", "EMPLOYEE", "CLIENT")
+                        //.requestMatchers(HttpMethod.POST, "/usuarios")
+                            //.hasAnyAuthority("ADMIN", "EMPLOYEE", "CLIENT")
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
                         // AppointmentController
                         .requestMatchers(HttpMethod.GET, "/peluquerias/{idPeluqueria}/citas")
                             .hasAnyAuthority("ADMIN", "EMPLOYEE")
