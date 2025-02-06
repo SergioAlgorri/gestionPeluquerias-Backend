@@ -55,7 +55,7 @@ public class ApplicationConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOrigin("https://white-tree-0e633e903.4.azurestaticapps.net");
+        config.addAllowedOrigin("https://witty-moss-06101b803.4.azurestaticapps.net");
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.AUTHORIZATION,
                 HttpHeaders.CONTENT_TYPE,
