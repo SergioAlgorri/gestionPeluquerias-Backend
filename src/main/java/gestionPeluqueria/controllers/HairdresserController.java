@@ -95,7 +95,7 @@ public class HairdresserController {
     public ResponseEntity<HttpStatus> deleteHairdresser(@PathVariable("id") long idHairdresser) {
         try {
             if (hairdresserService.findById(idHairdresser) == null) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
 
             hairdresserService.deleteHairdresser(idHairdresser);
