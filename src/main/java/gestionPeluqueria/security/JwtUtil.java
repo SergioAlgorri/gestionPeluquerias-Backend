@@ -1,6 +1,7 @@
 package gestionPeluqueria.security;
 
 import gestionPeluqueria.entities.Inheritance.User;
+import gestionPeluqueria.entities.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
@@ -15,13 +16,27 @@ public class JwtUtil {
         // Tiempo de expiración de 1 hora
         Date expirationDate = new Date(date.getTime() + SecurityConstants.JWT_EXPIRATION_1_HOUR);
 
-        return Jwts.builder()
-                .setSubject(user.getEmail())
-                .claim("role", user.getRole())
-                .setIssuedAt(date)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET_KEY)
-                .compact();
+        String token;
+        if (!user.getRole().equals(Role.GUEST)) {
+            token = Jwts.builder()
+                    .setSubject(user.getEmail())
+                    .claim("role", user.getRole())
+                    .setIssuedAt(date)
+                    .setExpiration(expirationDate)
+                    .signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET_KEY)
+                    .compact();
+        } else {
+            token = Jwts.builder()
+                    .setSubject(user.getEmail())
+                    .claim("role", user.getRole())
+                    .claim("id", user.getId())
+                    .setIssuedAt(date)
+                    .setExpiration(expirationDate)
+                    .signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET_KEY)
+                    .compact();
+        }
+
+        return token;
     }
 
     public String extractUserEmail(String token) {
