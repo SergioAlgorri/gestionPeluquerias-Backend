@@ -77,6 +77,17 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
     }
 
     @Override
+    public List<Appointment> getHistoryAppointmentsHairdresser(long idHairdresser) {
+
+        if (hairdresserRepository.findById(idHairdresser) == null) {
+            return null;
+        }
+
+        return appointmentRepository.findByHairdresserIdAndAttendedTrue(idHairdresser);
+    }
+
+    @Override
+    @Transactional
     public Appointment createAppointment(long idHairdresser, RequestAppointmentDTO request) {
         // Validar IDs
         Hairdresser hairdresser = hairdresserRepository.findById(idHairdresser);
@@ -92,7 +103,7 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
         User user;
         if (request.getIdUser() != null) {
             user = userRepository.findById(request.getIdUser().longValue());
-            if (user == null || user.getRole().equals(Role.GUEST)) {
+            if (user == null) {
                 return null;
             }
         } else if (request.getName() != null && request.getFirstSurname() != null && request.getSecondSurname() != null
@@ -147,6 +158,9 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
                     return null;
                 }
             }
+        } else {
+            ((Guest) user).setAppointment(appointment);
+            userRepository.save(user);
         }
 
         appointmentRepository.save(appointment);
@@ -202,7 +216,6 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
             // Al eliminar de las citas activas del cliente automaticamente pasa a su historico
             ((Client) user).addHistory(appointment);
             appointment.setUser(null);
-            appointment.setHairdresser(null);
             appointment.setAttended(true);
             employee.getActiveAppointments().remove(appointment);
             hairdresser.getAppointments().remove(appointment);
@@ -284,13 +297,19 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
             throw new IllegalArgumentException();
         }
 
-        for (Appointment a: ((Client) user).getAppointments()) {
-            if (a.equals(appointment)) {
-                ((Client) user).getAppointments().remove(a);
-                userRepository.save(user);
-                appointmentRepository.delete(a);
-                return;
+        if (user.getRole().equals(Role.CLIENT)) {
+            for (Appointment a: ((Client) user).getAppointments()) {
+                if (a.equals(appointment)) {
+                    ((Client) user).getAppointments().remove(a);
+                    userRepository.save(user);
+                    appointmentRepository.delete(a);
+                    return;
+                }
             }
+        } else {
+            ((Guest) user).setAppointment(null);
+            userRepository.save(user);
+            appointmentRepository.delete(appointment);
         }
 
         throw new IllegalArgumentException();
@@ -303,11 +322,17 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
             return null;
         }
 
+        List<Appointment> historyAppointments = new ArrayList<>();
         if (user instanceof Client) {
-            return ((Client) user).getHistory();
+            for (Appointment a :((Client) user).getHistory()) {
+                a.setUser(user);
+                historyAppointments.add(a);
+            }
         } else {
             return null;
         }
+
+        return historyAppointments;
     }
 
     public List<LocalTime> getAvailability(long idHairdresser, long idService, LocalDate date, Long idEmployee) {
@@ -334,7 +359,7 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
         LocalTime startHour = openingTime;
         if (date.equals(LocalDate.now())) {
             LocalTime currentHour = LocalTime.now();
-            if (currentHour.isAfter(openingTime)) {
+            if (currentHour.isAfter(openingTime) && currentHour.isBefore(closingTime)) {
                 startHour = currentHour.plusMinutes(15 - (currentHour.getMinute() % 15));
             }
         }
@@ -343,6 +368,9 @@ public class AppointmentServiceImpl implements IAppointmentHairdresserService, I
         LocalDateTime endDay = date.atTime(closingTime);
 
         List<LocalTime> availableHours = new ArrayList<>();
+        if (endDay.isBefore(startDay)) {
+            return availableHours;
+        }
         LocalDateTime iterHour = startDay;
         while (iterHour.plusMinutes(totalDurationService).isBefore(endDay) ||
                 iterHour.plusMinutes(totalDurationService).equals(endDay)) {

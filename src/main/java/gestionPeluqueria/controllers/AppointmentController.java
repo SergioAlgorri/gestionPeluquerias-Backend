@@ -48,6 +48,29 @@ public class AppointmentController {
         }
     }
 
+    @GetMapping(value = "/peluquerias/{idPeluqueria}/historico_citas", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentDTO>> getHistoryAppointmentsHairdresser
+            (@PathVariable("idPeluqueria") long idHairdresser) {
+        try {
+            List<Appointment> appointments = appointmentService.getHistoryAppointmentsHairdresser(idHairdresser);
+
+            if (appointments == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            if (appointments.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            List<AppointmentDTO> result = appointments.stream()
+                    .map(AppointmentDTOAssembler::generateDTO)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping(value = "peluquerias/{idPeluqueria}/citas", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AppointmentDTO> createAppointment(@PathVariable("idPeluqueria") long idHairdresser,
@@ -163,7 +186,7 @@ public class AppointmentController {
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
