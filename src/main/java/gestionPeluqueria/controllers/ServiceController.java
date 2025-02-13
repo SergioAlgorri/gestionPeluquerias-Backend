@@ -86,7 +86,7 @@ public class ServiceController {
     public ResponseEntity<HttpStatus> deleteService(@PathVariable("id") long id) {
         try {
             if (hairService.findById(id) == null) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
 
             hairService.deleteService(id);

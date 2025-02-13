@@ -76,17 +76,18 @@ public class UserServiceImplTest {
     @Test
     void findAllTest() {
         // Lista Vacía
-        when(mockUserRepository.findAll(any(Pageable.class))).thenReturn(emptyList);
+        when(mockUserRepository.findByFilters(isNull(), isNull(), isNull(), any(Pageable.class))).thenReturn(emptyList);
         emptyList = userService.findAll(null, null, null,
                 PageRequest.of(0,10));
-        verify(mockUserRepository).findAll(any(Pageable.class));
+        verify(mockUserRepository).findByFilters(isNull(), isNull(), isNull(), any(Pageable.class));
         assertTrue(emptyList.isEmpty(), "The list of users should be empty");
 
         // Todos los clientes
-        when(mockUserRepository.findAll(any(Pageable.class))).thenReturn(userList);
+        when(mockUserRepository.findByFilters(isNull(), isNull(), isNull(), any(Pageable.class))).thenReturn(userList);
         Page<User> result = userService.findAll(null, null, null,
                 PageRequest.of(0,10));
-        verify(mockUserRepository, times(2)).findAll(any(Pageable.class));
+        verify(mockUserRepository, times(2))
+                .findByFilters(isNull(), isNull(), isNull(), any(Pageable.class));
         assertFalse(result.isEmpty(), "The list of users should NOT be empty");
         assertEquals(userList.getContent().size(), result.getContent().size(),
                 "The number of users should be equal to the expected value");
@@ -97,10 +98,11 @@ public class UserServiceImplTest {
 
         // Filtrar por Nombre (findByName)
         Page<User> listByName = new PageImpl<>(List.of(client1, client3));
-        when(mockUserRepository.findByName(eq("Sergio"), any(Pageable.class))).thenReturn(listByName);
+        when(mockUserRepository.findByFilters(eq("Sergio"), isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(listByName);
         Page<User> resultByName = userService.findAll("Sergio", null, null,
                 PageRequest.of(0,10));
-        verify(mockUserRepository).findByName(eq("Sergio"), any(Pageable.class));
+        verify(mockUserRepository).findByFilters(eq("Sergio"), isNull(), isNull(), any(Pageable.class));
         assertFalse(resultByName.isEmpty(), "The list of users should NOT be empty");
         assertEquals(listByName.getContent().size(), resultByName.getContent().size(),
                 "The number of users should be equal to the expected value");
@@ -110,10 +112,12 @@ public class UserServiceImplTest {
                 "The user should be equal to the expected value");
 
         // Filtrar por Email (findByEmail)
-        when(mockUserRepository.findByEmail(eq("luciarr@gmail.com"))).thenReturn(client2);
+        Page<User> listByEmail = new PageImpl<>(List.of(client2));
+        when(mockUserRepository.findByFilters(isNull(), eq("luciarr@gmail.com"), isNull(), any(Pageable.class)))
+                .thenReturn(listByEmail);
         Page<User> resultByEmail = userService.findAll(null, "luciarr@gmail.com", null,
                 PageRequest.of(0,10));
-        verify(mockUserRepository).findByEmail(eq("luciarr@gmail.com"));
+        verify(mockUserRepository).findByFilters(isNull(), eq("luciarr@gmail.com"), isNull(), any(Pageable.class));
         assertFalse(resultByEmail.isEmpty(), "The list of users should NOT be empty");
         assertEquals(1, resultByEmail.getContent().size(),
                 "The number of users should be equal to the expected value");
@@ -121,10 +125,11 @@ public class UserServiceImplTest {
 
         // Filtrar por Rol (findByRole)
         Page<User> listByRole = new PageImpl<>(List.of(employee1));
-        when(mockUserRepository.findByRole(eq(Role.EMPLOYEE), any(Pageable.class))).thenReturn(listByRole);
+        when(mockUserRepository.findByFilters(isNull(), isNull(), eq(Role.EMPLOYEE), any(Pageable.class)))
+                .thenReturn(listByRole);
         Page<User> resultByRole = userService.findAll(null, null, Role.EMPLOYEE,
                 PageRequest.of(0,10));
-        verify(mockUserRepository).findByRole(eq(Role.EMPLOYEE),any(Pageable.class));
+        verify(mockUserRepository).findByFilters(isNull(), isNull(), eq(Role.EMPLOYEE),any(Pageable.class));
         assertFalse(resultByRole.isEmpty(), "The list of users should NOT be empty");
         assertEquals(listByRole.getContent().size(), resultByRole.getContent().size(),
                 "The number of users should be equal to the expected value");

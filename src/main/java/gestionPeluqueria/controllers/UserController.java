@@ -31,7 +31,7 @@ public class UserController {
                                               @RequestParam(required = false) String email,
                                               @RequestParam(required = false) Role role,
                                               @RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "10") int size) {
+                                              @RequestParam(defaultValue = "4") int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
             Page<User> users = userService.findAll(name, email, role, pageable);
@@ -54,13 +54,16 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            String currentEmail = userDetails.getUsername();
-            User currentUser = userService.findAll(null, currentEmail, null,
-                    PageRequest.of(0,10)).getContent().get(0);
-            if (currentUser.getRole().equals(Role.CLIENT) && (user.getId() != currentUser.getId())) {
-                return new ResponseEntity<>("No tienes permisos", HttpStatus.FORBIDDEN);
+            /*
+            if (!user.getRole().equals(Role.GUEST)) {
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                String currentEmail = userDetails.getUsername();
+                User currentUser = userService.findByEmail(currentEmail);
+                if (currentUser.getRole().equals(Role.CLIENT) && (user.getId() != currentUser.getId())) {
+                    return new ResponseEntity<>("No tienes permisos", HttpStatus.FORBIDDEN);
+                }
             }
+             */
 
             return new ResponseEntity<>(UserEmployeeDTOAssembler.generateDTO(user), HttpStatus.OK);
         } catch (Exception e ) {
@@ -102,7 +105,7 @@ public class UserController {
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long idUser) {
         try {
             if (userService.findById(idUser) == null) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
 
             userService.deleteUser(idUser);

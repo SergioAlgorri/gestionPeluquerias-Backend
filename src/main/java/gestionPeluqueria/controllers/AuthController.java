@@ -24,23 +24,23 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> register(@RequestBody RequestUserDTO user) {
         String message = authService.register(user);
         if (message.equals(ERROR_MESSAGE_REGISTER)) {
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(message, HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/token", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> login(@RequestBody RequestUserLoginDTO login) {
         String token = authService.login(login);
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping(value = "/guest_login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/token_guest", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> guestLogin(@RequestBody RequestGuestLoginDTO request) {
         String token = authService.loginAsGuest(request);
         return ResponseEntity.ok(token);

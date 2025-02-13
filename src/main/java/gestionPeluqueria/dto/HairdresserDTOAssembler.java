@@ -24,14 +24,16 @@ public class HairdresserDTOAssembler {
                 LocalDateTime startTime = a.getStartTime();
                 LocalDateTime endTime = a.getEndTime();
                 String comment = a.getComment();
-                String userName = concatFullName(a.getUser());
+                String userName = a.getUser().concatFullName();
                 String serviceName = a.getService().getName();
-                String employeeName = concatFullName(a.getEmployee());
+                String employeeName = a.getEmployee().concatFullName();
                 String hairdresserAddress = a.getHairdresser().getAddress();
                 BigDecimal price = a.getPrice();
 
                 AppointmentDTO appointmentDTO = new AppointmentDTO(startTime, endTime, comment, userName, serviceName,
                         employeeName, hairdresserAddress, price);
+                appointmentDTO.setId(a.getId());
+                appointmentDTO.setIdClient(a.getUser().getId());
                 if (a.getReward() != null) {
                     appointmentDTO.setRewardName(a.getReward().getName());
                 }
@@ -41,12 +43,13 @@ public class HairdresserDTOAssembler {
         }
 
         for (Employee e: hairdresser.getEmployees()) {
-            String name = concatFullName(e);
+            long id = e.getId();
+            String name = e.concatFullName();
             String email = e.getEmail();
             String telephone = e.getTelephone();
             LocalDate birthDate = e.getBirthDate();
             Role role = e.getRole();
-            EmployeeDTO employeeDTO = new EmployeeDTO(name, email, telephone, birthDate, role);
+            EmployeeDTO employeeDTO = new EmployeeDTO(id, name, email, telephone, birthDate, role);
             result.addEmployees(employeeDTO);
         }
 
@@ -63,9 +66,5 @@ public class HairdresserDTOAssembler {
         result.setTelephone(hairdresser.getTelephone());
         result.setCompanyName(hairdresser.getCompany().getName());
         return result;
-    }
-
-    private static String concatFullName(User u) {
-        return u.getName() + " " + u.getFirstSurname() + " " + u.getSecondSurname();
     }
 }

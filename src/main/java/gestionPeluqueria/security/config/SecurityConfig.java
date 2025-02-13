@@ -40,6 +40,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize ->
                     authorize
                         .requestMatchers("/recuperar_contraseña/**", "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/peluquerias", "/peluquerias/{id}").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/usuarios/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/disponibilidad").permitAll()
                         // HairdresserController
                         .requestMatchers(HttpMethod.POST, "/peluquerias").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/peluquerias/{id}").hasAuthority("ADMIN")
@@ -56,8 +60,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/peluquerias/servicios/{id}")
                             .hasAuthority("ADMIN")
                         // UserController
-                        .requestMatchers(HttpMethod.GET, "/usuarios")
-                            .hasAnyAuthority("ADMIN", "EMPLOYEE", "CLIENT")
                         .requestMatchers(HttpMethod.GET, "/usuarios/{idUsuario}")
                             .hasAnyAuthority("CLIENT", "ADMIN", "EMPLOYEE")
                         .requestMatchers(HttpMethod.POST, "/usuarios")

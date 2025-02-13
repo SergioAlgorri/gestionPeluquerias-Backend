@@ -33,6 +33,7 @@ public class UserEmployeeDTOAssembler {
                             userName, a.getService().getName(), employeeName, a.getHairdresser().getAddress(),
                             a.getPrice());
                     appointmentDTO.setId(a.getId());
+                    appointmentDTO.setIdClient(user.getId());
                     if (a.getReward() != null) {
                         appointmentDTO.setRewardName(a.getReward().getName());
                     }
@@ -65,6 +66,8 @@ public class UserEmployeeDTOAssembler {
                     AppointmentDTO appointmentDTO = new AppointmentDTO(a.getStartTime(), a.getEndTime(), a.getComment(),
                             userName, a.getService().getName(), employeeName, a.getHairdresser().getAddress(),
                             a.getPrice());
+                    appointmentDTO.setId(a.getId());
+                    appointmentDTO.setIdClient(user.getId());
                     if (a.getReward() != null) {
                         appointmentDTO.setRewardName(a.getReward().getName());
                     }

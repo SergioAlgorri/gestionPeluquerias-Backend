@@ -13,7 +13,6 @@ import java.util.List;
 @DiscriminatorValue("CLIENT")
 public class Client extends User implements Serializable {
 
-    @Transient
     private int points;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

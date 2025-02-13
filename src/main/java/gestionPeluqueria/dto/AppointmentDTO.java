@@ -6,13 +6,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppointmentDTO {
 
     private long id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String comment;
+    private long idClient;
     private String userName;
     private String serviceName;
     private String rewardName;
@@ -62,6 +63,14 @@ public class AppointmentDTO {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public long getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(long idClient) {
+        this.idClient = idClient;
     }
 
     public String getUserName() {

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,29 @@ public class AppointmentController {
 
             if (appointments == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            if (appointments.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            List<AppointmentDTO> result = appointments.stream()
+                    .map(AppointmentDTOAssembler::generateDTO)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/peluquerias/{idPeluqueria}/historico_citas", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentDTO>> getHistoryAppointmentsHairdresser
+            (@PathVariable("idPeluqueria") long idHairdresser) {
+        try {
+            List<Appointment> appointments = appointmentService.getHistoryAppointmentsHairdresser(idHairdresser);
+
+            if (appointments == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
             if (appointments.isEmpty()) {
@@ -162,7 +186,22 @@ public class AppointmentController {
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value= "/disponibilidad")
+    public ResponseEntity<List<LocalTime>> getAvailability(@RequestParam long idHairdresser,
+                                                           @RequestParam LocalDate date,
+                                                           @RequestParam long idService,
+                                                           @RequestParam(required = false) Long idEmployee) {
+        try {
+            List<LocalTime> availableHours =
+                    appointmentService.getAvailability(idHairdresser, idService, date, idEmployee);
+
+            return new ResponseEntity<>(availableHours, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
