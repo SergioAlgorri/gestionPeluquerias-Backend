@@ -34,25 +34,40 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Page<User> findAll(String name, String email, Role role, Pageable pageable) {
+        /*
         if (name != null && !name.isEmpty()) {
             return userRepository.findByPartialName(name, pageable);
         }
 
         if (email != null && !email.isEmpty()) {
             User userByEmail = userRepository.findByEmail(email);
-            return new PageImpl<>(List.of(userByEmail), pageable, 1);
+            // return new PageImpl<>(List.of(userByEmail), pageable, 1);
+            return userRepository.findByPartialEmail(email, pageable);
         }
 
         if (role != null) {
             return userRepository.findByRole(role, pageable);
         }
+         */
 
-        return userRepository.findAll(pageable);
+        // return userRepository.findAll(pageable);
+        return userRepository.findByFilters(name, email, role, pageable);
     }
 
     @Override
     public User findById(long id) {
         User user = userRepository.findById(id);
+
+        if (user == null) {
+            return null;
+        }
+
+        return user;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        User user = userRepository.findByEmail(email);
 
         if (user == null) {
             return null;
